@@ -1,0 +1,7 @@
+if (not x=24) then
+    x :=24;
+    y := 20;
+    res.distance := 20*24;
+else
+    var := true;
+end if;

@@ -1,0 +1,10 @@
+package lexer;
+
+/**
+ * Tag enum
+ */
+public enum Tag {
+    NUM, ID, OP, CHAR, SEPARATOR, ACCESS, AND, BEGIN, ELSE, ELSIF, END, FALSE, FOR, FUNCTION,
+    IF, IN, IS, LOOP, NEW, NOT, NULL, OR, OUT, PROCEDURE, RECORD, REM, RETURN, REVERSE, THEN,
+    TRUE, TYPE, USE, WHILE, WITH
+}

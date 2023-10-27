@@ -1,0 +1,7 @@
+for x in 1 .. 10 loop
+    y := x+y;
+end loop;
+x:= y/x;
+while y < 10 loop
+     y := y + 1;
+end loop;
