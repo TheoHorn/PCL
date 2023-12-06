@@ -65,7 +65,7 @@ public class TreeParser {
                         tokens.remove(0);}
                 }
             }
-            else{throw new Exception("Syntax Error");}
+            
 
         }
     }
