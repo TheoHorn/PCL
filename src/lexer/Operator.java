@@ -28,6 +28,7 @@ public class Operator extends Token{
         return switch (s) {
             case "+" -> "add";
             case "-" -> "sub";
+            case "-u" -> "neg";
             case "*" -> "mul";
             case "/" -> "div";
             case "/=" -> "res";

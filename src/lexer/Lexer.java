@@ -168,10 +168,22 @@ public class Lexer {
                  else if (c == '-'){
                     i++;
                     char d = line.charAt(i);
+
                     if (d == '-'){
                         break;
                     }else{
-                        this.tokens.add(new Operator(String.valueOf(c)));
+                        if(!this.tokens.isEmpty()){
+                            Token last_token = this.tokens.get(this.tokens.size()-1);
+                            if (last_token.getTag() == Tag.OP){
+                                this.tokens.add(new Operator("-u"));
+                            }else{
+                                this.tokens.add(new Operator("-"));
+                            }
+                        }else{
+                            this.tokens.add(new Operator("-u"));
+                        }
+
+
                     }
                  }// If the character is an equal, we add it to the tokens
                  else if(c == '=' ){
