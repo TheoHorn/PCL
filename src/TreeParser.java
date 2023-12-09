@@ -129,31 +129,31 @@ public class TreeParser {
         if(current_tag == Tag.TYPE){
             // on le supprime car on vient de l'utiliser
             tokens.poll();
-            Node ident = IDENT(tokens);
-            Node def_ident = DEF_IDENT(tokens);
+            Node ident = IDENT();
+            Node def_ident = DEF_IDENT();
             decl.addChild(ident);
             decl.addChild(def_ident);
         }
         // second rule : procedure PROC
         else if (current_tag == Tag.PROCEDURE){
             tokens.poll();
-            Node proc = PROC(tokens);
+            Node proc = PROC();
             decl.addChild(proc);
         }
         // third rule : function FUNC
         else if (current_tag == Tag.FUNCTION){
             tokens.poll();
-            Node func = FUNC(tokens);
+            Node func = FUNC();
             decl.addChild(func);
         }
         // fourth rule : IDENT_PLUS : TYPE AFFECT_EXIST
         else if (current_tag == Tag.ID){
-            Node ident_plus = IDENT_PLUS(tokens);
+            Node ident_plus = IDENT_PLUS();
             current_token = tokens.poll();
             current_tag = current_token.getTag();
             if(current_tag == Tag.OP && ((Operator) current_token).getValue().equals("def")){
-                Node type = TYPE(tokens);
-                Node affect_exist = AFFECT_EXIST(tokens);
+                Node type = TYPE();
+                Node affect_exist = AFFECT_EXIST();
                 decl.addChild(ident_plus);
                 decl.addChild(type);
                 decl.addChild(affect_exist);
@@ -173,10 +173,10 @@ public class TreeParser {
         Tag current_tag = current_token.getTag();
 
         if(current_tag == Tag.IS){
-            Node def_ident_fin = DEF_IDENT_FIN(tokens);
+            Node def_ident_fin = DEF_IDENT_FIN();
             def_ident.addChild(def_ident_fin);
         }else if (current_tag == Tag.SEPARATOR && ((Word) current_token).getValue().equals(";")){
-            Node def_ident_fin = DEF_IDENT_FIN(tokens);
+            Node def_ident_fin = DEF_IDENT_FIN();
             def_ident.addChild(def_ident_fin);
         }else{
             throw new SyntaxException(current_token.toString());
@@ -189,10 +189,10 @@ public class TreeParser {
         Tag current_tag = current_token.getTag();
 
         if(current_tag == Tag.ACCESS){
-            Node ident = IDENT(tokens);
+            Node ident = IDENT();
             def_ident_fin.addChild(ident);
         }else if (current_tag == Tag.RECORD){
-            Node champs_plus = CHAMPS_PLUS(tokens);
+            Node champs_plus = CHAMPS_PLUS();
             current_token = tokens.poll();
             current_tag = current_token.getTag();
             if(current_tag == Tag.END){
