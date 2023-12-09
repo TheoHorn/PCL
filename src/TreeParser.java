@@ -10,28 +10,123 @@ import lexer.*;
 
 public class TreeParser {
     
-    public ArrayList<lexer.Token> Axiome;
+    private Node arbre;
+    private ArrayDeque<Token> tokens;
     
-
-    TreeParser(ArrayList<lexer.Token> Axiome){
-        this.Axiome=Axiome;
+    public TreeParser(ArrayDeque<Token> tokens) throws Exception {
+        this.tokens = tokens;
+        this.arbre = null;
+        this.File();
     }
 
+    public void File() throws Exception {
+        this.arbre = new Node("File");
+        Token current_token = tokens.peek();
+        Tag current_tag = current_token.getTag();
 
-    public void Axiome(ArrayList<lexer.Token> tokens) throws Exception {
-        if(tokens.get(0).getTag()==Tag.WITH){Axiome.add(tokens.get(0)); tokens.remove(0);}
-        if (tokens.get(0) instanceof lexer.Word & ((lexer.Word) tokens.get(0)).getValue()=="Text_IO"){Axiome.add(tokens.get(0)); tokens.remove(0);}
-        if(tokens.get(0).getTag()==Tag.OP){Axiome.add(tokens.get(0)); tokens.remove(0);}
-        if (tokens.get(0) instanceof lexer.Word || ((lexer.Word) Axiome.get(3)).getValue()!="Text_IO"){throw new Exception("Syntax Error");}
-        if(tokens.get(0).getTag()!=Tag.SEPARATOR){Axiome.add(tokens.get(0)); tokens.remove(0);}
-        if(tokens.get(0).getTag()!=Tag.USE){Axiome.add(tokens.get(0)); tokens.remove(0);}
-        if(tokens.get(0).getTag()!=Tag.OP){Axiome.add(tokens.get(0)); tokens.remove(0);} //acs
-        if(tokens.get(0) instanceof lexer.Word || ((lexer.Word) Axiome.get(0)).getValue()!="Text_IO"){Axiome.add(tokens.get(0)); tokens.remove(0);}
-        if(tokens.get(0).getTag()!=Tag.SEPARATOR){Axiome.add(tokens.get(0)); tokens.remove(0);}
-        PROC(tokens);
+        //first token : with
+        if(current_tag == Tag.WITH){
+            this.tokens.poll();
+            current_token = tokens.peek();
+            current_tag = current_token.getTag();
+        }else{
+            throw new  SyntaxException(current_token.toString());
+        }
+
+        //second token : Ada
+        if (current_tag == Tag.ID && ((Word) current_token).getValue()=="Ada"){
+            this.tokens.poll();
+            current_token = tokens.peek();
+            current_tag = current_token.getTag();
+        }else{
+            throw new  SyntaxException(current_token.toString());
+        }
+
+        //third token : .
+        if(current_tag==Tag.OP && ((Operator) current_token).getValue().equals("acs")){
+            this.tokens.poll();
+            current_token = tokens.peek();
+            current_tag = current_token.getTag();
+        }else{
+            throw new SyntaxException(current_token.toString());
+        }
+
+        //fourth token : Text_IO
+        if (current_tag == Tag.ID && ((Word) current_token).getValue()=="Text_IO"){
+            this.tokens.poll();
+            current_token = tokens.peek();
+            current_tag = current_token.getTag();
+        }else{
+            throw new  SyntaxException(current_token.toString());
+        }
+
+        //fifth token : ;
+        if(current_tag==Tag.SEPARATOR && ((Word) current_token).getValue().equals(";")){
+            this.tokens.poll();
+            current_token = tokens.peek();
+            current_tag = current_token.getTag();
+        }else{
+            throw new  SyntaxException(current_token.toString());
+        }
+
+        //sixth token : use
+         if(current_tag!=Tag.ID && ((Word) current_token).getValue().equals("use")){
+            this.tokens.poll();
+            current_token = tokens.peek();
+            current_tag = current_token.getTag();
+        }
+
+        //seventh token : Ada
+        if (current_tag == Tag.ID && ((Word) current_token).getValue()=="Ada"){
+            this.tokens.poll();
+            current_token = tokens.peek();
+            current_tag = current_token.getTag();
+        }else{
+            throw new  SyntaxException(current_token.toString());
+        }
+
+        //eighth token : .
+        if(current_tag==Tag.OP && ((Operator) current_token).getValue().equals("acs")){
+            this.tokens.poll();
+            current_token = tokens.peek();
+            current_tag = current_token.getTag();
+        }else{
+            throw new SyntaxException(current_token.toString());
+        }
+
+        //ninth token : Text_IO
+        if (current_tag == Tag.ID && ((Word) current_token).getValue()=="Text_IO"){
+            this.tokens.poll();
+            current_token = tokens.peek();
+            current_tag = current_token.getTag();
+        }else{
+            throw new  SyntaxException(current_token.toString());
+        }
+
+        //tenth token : ;
+        if(current_tag==Tag.SEPARATOR && ((Word) current_token).getValue().equals(";")){
+            this.tokens.poll();
+            current_token = tokens.peek();
+            current_tag = current_token.getTag();
+        }else{
+            throw new  SyntaxException(current_token.toString());
+        }
+
+        //eleventh token : procedure
+        if(current_tag==Tag.PROCEDURE){
+            this.tokens.poll();
+            current_token = tokens.peek();
+            current_tag = current_token.getTag();
+        }else{
+            throw new  SyntaxException(current_token.toString());
+        }
+
+        PROC();
+        
+        
         }
     
-    public void DECL(ArrayList<lexer.Token> tokens) throws Exception {
+    public void DECL() throws Exception {
     
         if(tokens.get(0).getTag()==Tag.TYPE){
             Axiome.add(tokens.get(0)); 
@@ -52,7 +147,7 @@ public class TreeParser {
         else{
             
             IDENT_PLUS(tokens);
-            if(tokens.get(0) instanceof lexer.Word || ((lexer.Word) Axiome.get(0)).getValue()!=":"){
+            if(tokens.get(0) instanceof Word || ((Word) Axiome.get(0)).getValue()!=":"){
                 Axiome.add(tokens.get(0)); 
                 tokens.remove(0);
                 if(tokens.get(0).getTag()==Tag.TYPE){
@@ -69,7 +164,7 @@ public class TreeParser {
         }
     }
 
-    public void DEF_IDENT(ArrayList<lexer.Token> tokens) throws Exception{
+    public void DEF_IDENT() throws Exception{
         if(tokens.get(0).getTag()==Tag.SEPARATOR){
             Axiome.add(tokens.get(0)); 
             tokens.remove(0);}
@@ -80,7 +175,7 @@ public class TreeParser {
         else{throw new Exception("Syntax Error");}
     }
 
-    public void DEF_IDENT_FIN(ArrayList<lexer.Token> tokens) throws Exception {
+    public void DEF_IDENT_FIN() throws Exception {
         if(tokens.get(0).getTag()==Tag.ACCESS){
             Axiome.add(tokens.get(0)); 
             tokens.remove(0);
@@ -109,7 +204,7 @@ public class TreeParser {
 
     }
 
-    public void PROC(ArrayList<lexer.Token> tokens) throws Exception {
+    public void PROC() throws Exception {
     
     }
     }

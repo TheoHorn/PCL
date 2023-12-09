@@ -28,7 +28,7 @@ public class Lexer {
     /**
      * List of tokens found
      */
-    private final ArrayList<Token> tokens;
+    private final ArrayDeque<Token> tokens;
 
     /**
      * Constructor
@@ -36,7 +36,7 @@ public class Lexer {
      */
     public Lexer(File f){
         this.line_number = 1;
-        this.tokens = new ArrayList<>();
+        this.tokens = new ArrayDeque<>();
         this.words = new Hashtable<>();
         this.reservedKeywords();
         try {
@@ -131,7 +131,7 @@ public class Lexer {
                     if (Character.isLetter(c)|| c == '_'){
                         throw new Exception("Error at line " + line_number + " : " + c + " is not a valid character");
                     }
-                    this.tokens.add(new Num(v));
+                    this.tokens.addLast(new Num(v));
                 }// If the character is a letter, we read the whole word
                  else if(Character.isLetter(c)){
                     StringBuilder s = new StringBuilder();
@@ -147,11 +147,11 @@ public class Lexer {
                     String str = s.toString();
                     // If the word is a reserved keyword, we add it to the tokens with the corresponding tag
                     if (this.words.containsKey(str)){
-                        this.tokens.add(this.words.get(str));
+                        this.tokens.addLast(this.words.get(str));
                     }else{
                         Word w = new Word(Tag.ID, str);
                         this.words.put(str, w);
-                        this.tokens.add(w);
+                        this.tokens.addLast(w);
                     }
                 }// If the character is an operator that can be used alone or with an = , we add it to the tokens
                  else if (c == ':' || c == '<' || c == '>' || c == '/' || c == '*' || c == '+' || c == '(' || c == ')'){
@@ -159,10 +159,10 @@ public class Lexer {
                     char d = line.charAt(i);
                     // If the next character is an =, we add the operator with the corresponding tag
                     if (d == '=') {
-                        this.tokens.add(new Operator(String.valueOf(c)+ d));
+                        this.tokens.addLast(new Operator(String.valueOf(c)+ d));
                         i++;
                     } else {
-                        this.tokens.add(new Operator(String.valueOf(c)));
+                        this.tokens.addLast(new Operator(String.valueOf(c)));
                     }
                  }// If the character is a -, we check if it is a comment or an operator
                  else if (c == '-'){
@@ -173,43 +173,43 @@ public class Lexer {
                         break;
                     }else{
                         if(!this.tokens.isEmpty()){
-                            Token last_token = this.tokens.get(this.tokens.size()-1);
+                            Token last_token = this.tokens.peekLast();
                             if (last_token.getTag() == Tag.OP){
-                                this.tokens.add(new Operator("-u"));
+                                this.tokens.addLast(new Operator("-u"));
                             }else{
-                                this.tokens.add(new Operator("-"));
+                                this.tokens.addLast(new Operator("-"));
                             }
                         }else{
-                            this.tokens.add(new Operator("-u"));
+                            this.tokens.addLast(new Operator("-u"));
                         }
 
 
                     }
                  }// If the character is an equal, we add it to the tokens
                  else if(c == '=' ){
-                    this.tokens.add(new Operator(String.valueOf(c)));
+                    this.tokens.addLast(new Operator(String.valueOf(c)));
                     i++;
                 }// If the character is a dot, we check if it is a dot alone or a double dot
                  else if (c == '.') {
                     i++;
                     char d = line.charAt(i);
                     if (d == '.') {
-                        this.tokens.add(new Operator(".."));
+                        this.tokens.addLast(new Operator(".."));
                         i++;
                     } else {
-                        this.tokens.add(new Operator("."));
+                        this.tokens.addLast(new Operator("."));
                     }
                 } // If the character is an apostrophe, we add the char to the tokens, and we check if the next character is an apostrophe
                  else if (c == '\''){
                     i++;
-                    this.tokens.add(new Char(line.charAt(i)));
+                    this.tokens.addLast(new Char(line.charAt(i)));
                     i++;
                     c = line.charAt(i);
                     if (c != '\''){
                         throw new Exception("Error at line " + line_number + " : ' is used incorrectly");
                     }
                 }else if(c == ';' || c == ','){
-                    this.tokens.add(new Word(Tag.SEPARATOR,String.valueOf(c)));
+                    this.tokens.addLast(new Word(Tag.SEPARATOR,String.valueOf(c)));
                     i++;
                  }else{
                     throw new Exception("Error at line " + line_number + " : " + c + " is not a valid character");
@@ -221,7 +221,7 @@ public class Lexer {
     }
 
 
-    public ArrayList<Token> getTokens() {
+    public ArrayDeque<Token> getTokens() {
         return tokens;
     }
 

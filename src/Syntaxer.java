@@ -14,15 +14,14 @@ import java.util.*;
 
 
 public class Syntaxer {
-    private ArrayList<Token> tokens;
-    private int currentTokenIndex = 0;
+    private ArrayDeque<Token> tokens;
 
-    public Parser(ArrayList<Token> tokens) {
+    public Parser(ArrayDeque<Token> tokens) {
         this.tokens = tokens;
     }
 
     private Token currentToken() {
-        return tokens.get(currentTokenIndex);
+        return tokens.peekFirst();
     }
 
     private void nextToken() {

@@ -1,7 +1,7 @@
 #le 1 correspond au - unaire
 AXIOME -> FILE
 
-FILE -> with ada ; procedure PROC eof
+FILE -> with Ada.Text_IO ; use Ada.Text_IO ; procedure PROC 
 
 DECL -> type IDENT DEF_IDENT 
 DECL -> procedure PROC
