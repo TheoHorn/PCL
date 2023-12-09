@@ -26,4 +26,12 @@ public class Char extends Token{
                 ", value=" + value +
                 '}';
     }
+
+    /**
+     * Get char's value
+     * @return char's value
+     */
+    public char getValue() {
+        return value;
+    }
 }

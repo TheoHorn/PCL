@@ -1,3 +1,4 @@
+#le 1 correspond au - unaire
 AXIOME -> FILE
 
 FILE -> with ada ; procedure PROC eof

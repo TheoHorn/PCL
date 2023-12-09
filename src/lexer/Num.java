@@ -26,4 +26,13 @@ public class Num extends Token{
                 ", value=" + value +
                 '}';
     }
+
+    /**
+     * Get Num value
+     * @return Num value
+     */
+    public int getValue() {
+        return value;
+    }
+    
 }

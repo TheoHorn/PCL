@@ -54,4 +54,13 @@ public class Operator extends Token{
                 ", value='" + value + '\'' +
                 '}';
     }
+
+    /**
+     * Get operator value
+     * @return operator value
+     */
+    public String getValue() {
+        return value;
+    }
+    
 }

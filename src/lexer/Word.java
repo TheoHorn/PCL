@@ -27,4 +27,12 @@ public class Word extends Token{
                 ", value='" + value + '\'' +
                 '}';
     }
+
+    /**
+     * Get word value
+     * @return word value
+     */
+    public String getValue() {
+        return value;
+    }
 }
