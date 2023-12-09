@@ -371,6 +371,9 @@ public class TreeParser {
             Node champs_suite = CHAMPS_SUITE();
             champs_plus.addChild(champs);
             champs_plus.addChild(champs_suite);
+        }else{
+            throw new SyntaxException(current_token.toString());
+        }
     }
 
 }
