@@ -108,7 +108,7 @@ public class TreeParser {
 
         //eleventh token : procedure
         if(!(current_tag==Tag.PROCEDURE)){
-            //pas de poll car on veut garder le token pour le prochain appel de fonction
+            //pas de poll() car on veut garder le token pour le prochain appel de fonction
              throw new  SyntaxException(current_token.toString());
         }
 
@@ -151,7 +151,7 @@ public class TreeParser {
             Node ident_plus = IDENT_PLUS(tokens);
             current_token = tokens.poll();
             current_tag = current_token.getTag();
-            if(current_tag == Tag.OP && ((Operator) current_token).getValue().equals(":")){
+            if(current_tag == Tag.OP && ((Operator) current_token).getValue().equals("def")){
                 Node type = TYPE(tokens);
                 Node affect_exist = AFFECT_EXIST(tokens);
                 decl.addChild(ident_plus);
@@ -167,54 +167,213 @@ public class TreeParser {
         return decl;
     }
 
-    private Node IDENT(ArrayDeque<Token> tokens2) {
-        return null;
-    }
-
     public Node DEF_IDENT() throws Exception{
-        if(tokens.get(0).getTag()==Tag.SEPARATOR){
-            Axiome.add(tokens.get(0)); 
-            tokens.remove(0);}
-        if(tokens.get(0).getTag()==Tag.IF){
-            Axiome.add(tokens.get(0)); 
-            tokens.remove(0);
-            DEF_IDENT_FIN(tokens);}
-        else{throw new Exception("Syntax Error");}
+        Node def_ident = new Node("DEF_IDENT");
+        Token current_token = tokens.poll();
+        Tag current_tag = current_token.getTag();
+
+        if(current_tag == Tag.IS){
+            Node def_ident_fin = DEF_IDENT_FIN(tokens);
+            def_ident.addChild(def_ident_fin);
+        }else if (current_tag == Tag.SEPARATOR && ((Word) current_token).getValue().equals(";")){
+            Node def_ident_fin = DEF_IDENT_FIN(tokens);
+            def_ident.addChild(def_ident_fin);
+        }else{
+            throw new SyntaxException(current_token.toString());
+        }
     }
 
     public Node DEF_IDENT_FIN() throws Exception {
-        if(tokens.get(0).getTag()==Tag.ACCESS){
-            Axiome.add(tokens.get(0)); 
-            tokens.remove(0);
-            IDENT(tokens);
-            if(tokens.get(0).getTag()==Tag.SEPARATOR){
-                Axiome.add(tokens.get(0)); 
-                tokens.remove(0);}
-        }
-        if(tokens.get(0).getTag()==Tag.RECORD){
-            Axiome.add(tokens.get(0)); 
-            tokens.remove(0);
-            CHAMPS_PLUS(tokens);
-            if(tokens.get(0).getTag()==Tag.END){
-                Axiome.add(tokens.get(0)); 
-                tokens.remove(0);
-                if(tokens.get(0).getTag()==Tag.RECORD){
-                    Axiome.add(tokens.get(0)); 
-                    tokens.remove(0);
-                    if(tokens.get(0).getTag()==Tag.SEPARATOR){
-                        Axiome.add(tokens.get(0)); 
-                        tokens.remove(0);
+        Node def_ident_fin = new Node("DEF_IDENT_FIN");
+        Token current_token = tokens.poll();
+        Tag current_tag = current_token.getTag();
+
+        if(current_tag == Tag.ACCESS){
+            Node ident = IDENT(tokens);
+            def_ident_fin.addChild(ident);
+        }else if (current_tag == Tag.RECORD){
+            Node champs_plus = CHAMPS_PLUS(tokens);
+            current_token = tokens.poll();
+            current_tag = current_token.getTag();
+            if(current_tag == Tag.END){
+                current_token = tokens.poll();
+                current_tag = current_token.getTag();
+                if(current_tag == Tag.RECORD){
+                    current_token = tokens.poll();
+                    current_tag = current_token.getTag();
+                    if(current_tag == Tag.SEPARATOR && ((Word) current_token).getValue().equals(";")){
+                        def_ident_fin.addChild(champs_plus);
+                    }else{
+                        throw new SyntaxException(current_token.toString());
                     }
+                }else{
+                    throw new SyntaxException(current_token.toString());
+                }
+            }else{
+                throw new SyntaxException(current_token.toString());
+            }
+        }else{
+            throw new SyntaxException(current_token.toString());
+        }
+        return def_ident_fin;
+    }
+
+    public Node FUNC(){
+        Node func = new Node("FUNC");
+        //peek car on veut garder le token pour le prochain appel de fonction
+        Token current_token = tokens.peek();
+        Tag current_tag = current_token.getTag();
+
+        if(current_tag == Tag.ID){
+            Node ident = IDENT();
+            Node param = PARAMS_EXISTE();
+            current_token = tokens.poll();
+            current_tag = current_token.getTag();
+            if(current_tag == Tag.RETURN){
+                Node type = TYPE();
+                current_token = tokens.poll();
+                current_tag = current_token.getTag();
+                if(current_tag == Tag.IS){
+                    Node decl = DECL_MULT();
+                    current_token = tokens.poll();
+                    current_tag = current_token.getTag();
+                    if(current_tag == Tag.BEGIN){
+                        Node inst = INSTR_PLUS();
+                        current_token = tokens.poll();
+                        current_tag = current_token.getTag();
+                        if(current_tag == Tag.END){
+                            Node ident2 = IDENT_EXISTE();
+                            current_token = tokens.poll();
+                            current_tag = current_token.getTag();
+                            if(current_tag == Tag.SEPARATOR && ((Word) current_token).getValue().equals(";")){
+                                func.addChild(ident);
+                                func.addChild(param);
+                                func.addChild(type);
+                                func.addChild(decl);
+                                func.addChild(inst);
+                                func.addChild(ident2);
+                            }else{
+                                throw new SyntaxException(current_token.toString());
+                            }
+                        }else{
+                            throw new SyntaxException(current_token.toString());
+                        }
+                    }else{
+                        throw new SyntaxException(current_token.toString());
+                    }
+                }else{
+                    throw new SyntaxException(current_token.toString());
+                }
+            }else{
+                throw new SyntaxException(current_token.toString());
+            }
+        }else{
+            throw new SyntaxException(current_token.toString());
+        }
+        return func;
+    }
+
+
+    public Node PROC(){
+        Node proc = new Node("PROC");
+        //peek car on veut garder le token pour le prochain appel de fonction
+        Token current_token = tokens.peek();
+        Tag current_tag = current_token.getTag();
+
+        if(current_tag == Tag.ID){
+            Node ident = IDENT();
+            current_token = tokens.poll();
+            current_tag = current_token.getTag();
+            if (current_tag == Tag.IS){
+                Node decl = DECL_MULT();
+                current_token = tokens.poll();
+                current_tag = current_token.getTag();
+                if(current_tag == Tag.BEGIN){
+                    Node inst = INSTR_PLUS();
+                    current_token = tokens.poll();
+                    current_tag = current_token.getTag();
+                    if(current_tag == Tag.END){
+                        Node ident2 = IDENT_EXISTE();
+                        current_token = tokens.poll();
+                        current_tag = current_token.getTag();
+                        if(current_tag == Tag.SEPARATOR && ((Word) current_token).getValue().equals(";")){
+                            proc.addChild(ident);
+                            proc.addChild(decl);
+                            proc.addChild(inst);
+                            proc.addChild(ident2);
+                        }else{
+                            throw new SyntaxException(current_token.toString());
+                        }
+                    }else{
+                        throw new SyntaxException(current_token.toString());
+                    }
+                }else{
+                    throw new SyntaxException(current_token.toString());
                 }
             }
         }
-
+        return proc;
     }
 
-    public Node PROC() throws Exception {
-    
+    public Node DECL_MULT() throws SyntaxException{
+        Node decl_mult = new Node("DECL_MULT");
+        //peek car on veut garder le token pour le prochain appel de fonction
+        Token current_token = tokens.peek();
+        Tag current_tag = current_token.getTag();
+
+        if(current_tag == Tag.TYPE || current_tag == Tag.PROCEDURE || current_tag == Tag.FUNCTION || current_tag == Tag.ID){
+            Node decl = DECL();
+            Node decl_mult2 = DECL_MULT();
+            decl_mult.addChild(decl);
+            decl_mult.addChild(decl_mult2);
+        }else if (current_tag == Tag.BEGIN){
+            // on ne fait rien car on est dans le cas epsilon
+        }else{
+            throw new SyntaxException(current_token.toString());
+        }
+        return decl_mult;
     }
+
+    public Node CHAMPS() throws SyntaxException{
+        Node champs = new Node("CHAMPS");
+        //peek car on veut garder le token pour le prochain appel de fonction
+        Token current_token = tokens.peek();
+        Tag current_tag = current_token.getTag();
+
+        if(current_tag == Tag.ID){
+            Node ident = IDENT_PLUS();
+            current_token = tokens.poll();
+            current_tag = current_token.getTag();
+            if(current_tag == Tag.OP && ((Operator) current_token).getValue().equals("def")){
+                Node type = TYPE();
+                current_token = tokens.poll();
+                current_tag = current_token.getTag();
+                if(current_tag == Tag.SEPARATOR && ((Word) current_token).getValue().equals(";")){
+                    champs.addChild(ident);
+                    champs.addChild(type);
+                }else{
+                    throw new SyntaxException(current_token.toString());
+                }
+            }else{
+                throw new SyntaxException(current_token.toString());
+            }
+        }
+        return champs;
     }
+
+    public Node CHAMPS_PLUS() throws SyntaxException{
+        Node champs_plus = new Node("CHAMPS_PLUS");
+        //peek car on veut garder le token pour le prochain appel de fonction
+        Token current_token = tokens.peek();
+        Tag current_tag = current_token.getTag();
+        if (current_tag == Tag.ID){
+            Node champs = CHAMPS();
+            Node champs_suite = CHAMPS_SUITE();
+            champs_plus.addChild(champs);
+            champs_plus.addChild(champs_suite);
+    }
+
+}
 
     
     
