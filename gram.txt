@@ -1,4 +1,3 @@
-#le 1 correspond au - unaire
 AXIOME -> FILE
 
 FILE -> with Ada.Text_IO ; use Ada.Text_IO ; procedure PROC 
@@ -76,6 +75,9 @@ ELSEIF -> elif EXPR THEN_EXISTE INSTR_PLUS
 ELSE_EXISTE -> ELSE
 ELSE_EXISTE -> ''
 ELSE -> else INSTR_PLUS
+
+THEN_EXISTE -> then
+THEN_EXISTE -> ''
 
 VAL -> ( PRIO_7 )
 VAL -> IDENT IDENT_FIN
