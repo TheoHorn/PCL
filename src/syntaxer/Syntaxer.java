@@ -6,6 +6,10 @@ import lexer.*;
 
 public class Syntaxer {
     
+    /**
+     * @param arbre : l'arbre syntaxique
+     * @param tokens : la liste des tokens
+     */
     private Node arbre;
     private ArrayDeque<Token> tokens;
 
@@ -15,11 +19,22 @@ public class Syntaxer {
         this.arbre = null;
     }
     
+    /**
+     * Constructeur de la classe Syntaxer
+     * @param tokens, la liste des tokens
+     * @throws Exception
+     */
     public Syntaxer(ArrayDeque<Token> tokens) throws Exception {
         this.tokens = tokens;
         this.arbre = null;
     }
 
+
+    /**
+     * Fonction qui lance la syntaxe
+     * @return
+     * @throws Exception
+     */
     public Node launch() throws Exception {
         return this.File();
     }
@@ -160,7 +175,7 @@ public class Syntaxer {
             current_tag = current_token.getTag();
             if(current_tag == Tag.OP && ((Operator) current_token).getValue().equals("def")){
                 Node type = TYPE();
-                Node affect_exist = AFFECT_EXIST();
+                Node affect_exist = AFFECT_EXISTE();
                 decl.addChildren(ident_plus);
                 decl.addChild(type);
                 decl.addChild(affect_exist);
@@ -172,10 +187,6 @@ public class Syntaxer {
             throw new SyntaxException(current_token.toString());
         }
         return decl;
-    }
-
-    private Node AFFECT_EXIST() {
-        return null;
     }
 
     public Node DEF_IDENT() throws Exception{
