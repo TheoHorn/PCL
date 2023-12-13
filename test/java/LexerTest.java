@@ -8,7 +8,7 @@ public class LexerTest {
 
     @Test
     public void test_space(){
-        File f = new File("test\\ressource\\space.txt");
+        File f = new File("test/ressource/space.txt");
         Lexer lex = new Lexer(f);
         try {
             lex.tokenizer();
@@ -22,7 +22,7 @@ public class LexerTest {
 
     @Test
     public void test_carriage_return(){
-        File f = new File("test\\ressource\\carriage_return.txt");
+        File f = new File("test/ressource/carriage_return.txt");
         Lexer lex = new Lexer(f);
         try {
             lex.tokenizer();
@@ -36,7 +36,7 @@ public class LexerTest {
 
     @Test
     public void test_tabulation(){
-        File f = new File("test\\ressource\\tabulation.txt");
+        File f = new File("test/ressource/tabulation.txt");
         Lexer lex = new Lexer(f);
         try {
             lex.tokenizer();
@@ -50,7 +50,7 @@ public class LexerTest {
 
     @Test
     public void test_alpha_normal(){
-        File f = new File("test\\ressource\\alpha.txt");
+        File f = new File("test/ressource/alpha.txt");
         Lexer lex = new Lexer(f);
         try {
             lex.tokenizer();
@@ -67,7 +67,7 @@ public class LexerTest {
 
     @Test
     public void test_alpha_underscore(){
-        File f = new File("test\\ressource\\alpha2.txt");
+        File f = new File("test/ressource/alpha2.txt");
         Lexer lex = new Lexer(f);
         try {
             lex.tokenizer();
@@ -84,7 +84,7 @@ public class LexerTest {
 
     @Test
     public void test_alpha_error_number_first(){
-        File f = new File("test\\ressource\\alpha3.txt");
+        File f = new File("test/ressource/alpha3.txt");
         Lexer lex = new Lexer(f);
         Exception exception = assertThrows(Exception.class, lex::tokenizer);
         assertEquals(exception.getMessage(), "Error at line 1 : _ is not a valid character");
@@ -92,14 +92,14 @@ public class LexerTest {
 
     @Test
     public void test_alpha_error_underscore_first(){
-        File f = new File("test\\ressource\\alpha4.txt");
+        File f = new File("test/ressource/alpha4.txt");
         Lexer lex = new Lexer(f);
         Exception exception = assertThrows(Exception.class, lex::tokenizer);
         assertEquals(exception.getMessage(), "Error at line 1 : _ is not a valid character");
     }
 
     @Test void test_alpha_symbols(){
-        File f = new File("test\\ressource\\alpha_symbols.txt");
+        File f = new File("test/ressource/alpha_symbols.txt");
         Lexer lex = new Lexer(f);
         try {
             lex.tokenizer();
@@ -126,7 +126,7 @@ public class LexerTest {
 
     @Test
     public void test_only_unique_operator(){
-        File f = new File("test\\ressource\\only_unique_operator.txt");
+        File f = new File("test/ressource/only_unique_operator.txt");
         Lexer lex = new Lexer(f);
         try {
             lex.tokenizer();
@@ -161,7 +161,7 @@ public class LexerTest {
 
     @Test
     public void test_double_operator(){
-        File f = new File("test\\ressource\\double_operator.txt");
+        File f = new File("test/ressource/double_operator.txt");
         Lexer lex = new Lexer(f);
         try {
             lex.tokenizer();
@@ -183,7 +183,7 @@ public class LexerTest {
 
     @Test
     public void test_comment(){
-        File f = new File("test\\ressource\\double_operator_commented.txt");
+        File f = new File("test/ressource/double_operator_commented.txt");
         Lexer lex = new Lexer(f);
         try {
             lex.tokenizer();
@@ -205,7 +205,7 @@ public class LexerTest {
 
     @Test
     public void test_principal_if(){
-        File f = new File("test\\ressource\\if.txt");
+        File f = new File("test/ressource/if.txt");
         Lexer lex = new Lexer(f);
         try {
             lex.tokenizer();
@@ -248,7 +248,7 @@ public class LexerTest {
 
     @Test
     public void test_principal_loop(){
-        File f = new File("test\\ressource\\loop.txt");
+        File f = new File("test/ressource/loop.txt");
         Lexer lex = new Lexer(f);
         try {
             lex.tokenizer();
