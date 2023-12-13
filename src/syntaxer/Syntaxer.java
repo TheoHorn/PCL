@@ -605,8 +605,17 @@ public class Syntaxer {
         return null;
     }
 
-    public Node IDENT() {
-        return null;
+    public Node IDENT() throws SyntaxException {
+        Node ident = new Node("IDENT");
+        Token current_token = tokens.poll();
+        Tag current_tag = current_token.getTag();
+
+        if (current_tag == Tag.ID){
+            ident.addChild(new Node(((Word) current_token).getValue()));
+        }else{
+            throw new SyntaxException(current_token.toString());
+        }
+        return ident;
     }
 
 

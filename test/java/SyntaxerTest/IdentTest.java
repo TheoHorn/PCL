@@ -1,6 +1,5 @@
 package SyntaxerTest;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
@@ -9,7 +8,9 @@ import org.junit.Test;
 import lexer.Tag;
 import lexer.Word;
 import syntaxer.Node;
+import syntaxer.SyntaxException;
 import syntaxer.Syntaxer;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class IdentTest {
 
@@ -20,22 +21,19 @@ public class IdentTest {
         syntaxer = new Syntaxer();   
     }
     
-    //to continue
     @Test
-    public void test_declaration_procedure() throws Exception {
+    public void test_ident() throws Exception {
         syntaxer.addToken(new Word(Tag.ID, "mot"));
         Node n = syntaxer.IDENT();
-        
-        assertTrue(n.equals(new Node("IDENT")));
+        Node n2 = new Node("IDENT");
+        n2.addChild(new Node("mot"));
+        assertTrue(n.equals(n2));
     }
 
-    //to continue
     @Test
-    public void test_declaration_procedure_error() {
+    public void test_ident_error() throws SyntaxException {
         syntaxer.addToken(new Word(Tag.PROCEDURE, "procedure"));
-        syntaxer.addToken(new Word(Tag.ID, "test"));
-        syntaxer.addToken(new Word(Tag.IS, "is"));
-        syntaxer.addToken(new Word(Tag.ID, "test"));
+        assertThrows(SyntaxException.class, () -> syntaxer.IDENT());
     }
     
 }
