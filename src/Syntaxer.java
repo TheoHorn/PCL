@@ -1,7 +1,3 @@
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.util.*;
 import lexer.*;
 
@@ -15,10 +11,13 @@ public class Syntaxer {
     public Syntaxer(ArrayDeque<Token> tokens) throws Exception {
         this.tokens = tokens;
         this.arbre = null;
-        this.File();
     }
 
-    public void File() throws Exception {
+    public Node launch() throws Exception {
+        return this.File();
+    }
+
+    public Node File() throws Exception {
         this.arbre = new Node("File");
         // on recupere le premier token en le supprimant de la tete de file
         Token current_token = tokens.poll();
@@ -115,7 +114,8 @@ public class Syntaxer {
         Node proc = PROC();
         // on ajoute le noeud de la procedure a l'arbre
         this.arbre.addChild(proc);
-        }
+        return proc;
+    }
     
     public Node DECL() throws Exception {
         Node decl = new Node("DECL");
@@ -167,6 +167,10 @@ public class Syntaxer {
         return decl;
     }
 
+    private Node AFFECT_EXIST() {
+        return null;
+    }
+
     public Node DEF_IDENT() throws Exception{
         Node def_ident = new Node("DEF_IDENT");
         Token current_token = tokens.poll();
@@ -181,6 +185,7 @@ public class Syntaxer {
         }else{
             throw new SyntaxException(current_token.toString());
         }
+        return def_ident;
     }
 
     public Node DEF_IDENT_FIN() throws Exception {
@@ -218,7 +223,7 @@ public class Syntaxer {
         return def_ident_fin;
     }
 
-    public Node FUNC(){
+    public Node FUNC() throws Exception{
         Node func = new Node("FUNC");
         //peek car on veut garder le token pour le prochain appel de fonction
         Token current_token = tokens.peek();
@@ -274,7 +279,11 @@ public class Syntaxer {
     }
 
 
-    public Node PROC(){
+    private Node PARAMS_EXISTE() {
+        return null;
+    }
+
+    public Node PROC() throws Exception{
         Node proc = new Node("PROC");
         //peek car on veut garder le token pour le prochain appel de fonction
         Token current_token = tokens.peek();
@@ -315,7 +324,8 @@ public class Syntaxer {
         return proc;
     }
 
-    public ArrayList<Node> DECL_MULT() throws SyntaxException{
+
+    public ArrayList<Node> DECL_MULT() throws Exception{
         ArrayList<Node> decl_mult = new ArrayList<>();
         //peek car on veut garder le token pour le prochain appel de fonction
         Token current_token = tokens.peek();
@@ -341,7 +351,7 @@ public class Syntaxer {
         Tag current_tag = current_token.getTag();
 
         if(current_tag == Tag.ID){
-            Node ident = IDENT_PLUS();
+            ArrayList<Node> ident = IDENT_PLUS();
             current_token = tokens.poll();
             current_tag = current_token.getTag();
             if(current_tag == Tag.OP && ((Operator) current_token).getValue().equals("def")){
@@ -349,7 +359,7 @@ public class Syntaxer {
                 current_token = tokens.poll();
                 current_tag = current_token.getTag();
                 if(current_tag == Tag.SEPARATOR && ((Word) current_token).getValue().equals(";")){
-                    champs.addChild(ident);
+                    champs.addChildren(ident);
                     champs.addChild(type);
                 }else{
                     throw new SyntaxException(current_token.toString());
@@ -391,6 +401,26 @@ public class Syntaxer {
             throw new SyntaxException(currentToken.toString());
         }
         return champ_suite;
+    }
+
+    public Node TYPE() {
+        return null;
+    }
+
+    public ArrayList<Node> IDENT_PLUS() {
+        return null;
+    }
+
+    public Node IDENT() {
+        return null;
+    }
+
+    public ArrayList<Node> INSTR_PLUS() {
+        return null;
+    }
+
+    private Node IDENT_EXISTE() {
+        return null;
     }
 
 }

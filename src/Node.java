@@ -10,8 +10,8 @@ public class Node {
 
     }
 
-    public void addChild(Node child) {
-        this.children.add(child);
+    public void addChild(Node type) {
+        this.children.add(type);
     }
 
     public void addChildren(ArrayList<Node> children) {
@@ -41,7 +41,7 @@ public class Node {
     public String toString() {
         StringBuilder s = new StringBuilder();
         s.append(this.name).append("\n");
-        s.append("-- \n")
+        s.append("-- \n");
         for (Node child : this.children) {
             s.append(child.toString());
         }
