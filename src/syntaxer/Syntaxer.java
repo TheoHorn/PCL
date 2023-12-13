@@ -1,3 +1,4 @@
+package syntaxer;
 import java.util.*;
 import lexer.*;
 
@@ -7,6 +8,12 @@ public class Syntaxer {
     
     private Node arbre;
     private ArrayDeque<Token> tokens;
+
+    // a utiliser pour les tests
+    public Syntaxer() throws Exception {
+        this.tokens = new ArrayDeque<>();
+        this.arbre = null;
+    }
     
     public Syntaxer(ArrayDeque<Token> tokens) throws Exception {
         this.tokens = tokens;
@@ -278,11 +285,6 @@ public class Syntaxer {
         return func;
     }
 
-
-    private Node PARAMS_EXISTE() {
-        return null;
-    }
-
     public Node PROC() throws Exception{
         Node proc = new Node("PROC");
         //peek car on veut garder le token pour le prochain appel de fonction
@@ -407,7 +409,199 @@ public class Syntaxer {
         return null;
     }
 
-    public ArrayList<Node> IDENT_PLUS() {
+    public ArrayList<Node> PARAMS() {
+        return null;
+    }
+
+    public Node PARAMS_EXISTE() {
+        return null;
+    }
+
+    public ArrayList<Node> PARAMS_PLUS() {
+        return null;
+    }
+
+    public ArrayList<Node> PARAMS_SUITE(){
+        return null;
+    }
+
+    public Node PARAM(){
+        return null;
+    }
+
+    public Node MODE_EXISTE(){
+        return null;
+    }
+
+    public Node MODE(){
+        return null;
+    }
+
+    public Node OUT_EXISTE(){
+        return null;
+    }
+
+    public Node AFFECT_EXISTE(){
+        return null;
+    }
+
+    public Node AFFECT(){
+        return null;
+    }
+
+    public Node EXPR(){
+        return null;
+    }
+
+    public ArrayList<Node> EXPR_PLUS(){
+        return null;
+    }
+
+    public ArrayList<Node> EXPR_SUITE(){
+        return null;
+    }
+
+    public Node EXPR_EXISTE(){
+        return null;
+    }
+
+    public ArrayList<Node> INSTR_PLUS(){
+        return null;
+    }
+
+    public ArrayList<Node> INSTR_SUITE(){
+        return null;
+    }
+
+    public Node INSTR(){
+        return null;
+    }
+
+    public Node INSTR_FIN(){
+        return null;
+    }
+
+    public Node RETURN(){
+        return null;
+    }
+
+    public Node LOOP(){
+        return null;
+    }
+
+    public ArrayList<Node> ELSEIF_MULT(){
+        return null;
+    }
+
+    public Node ELSEIF(){
+        return null;
+    }
+
+    public Node ELSE_EXISTE(){
+        return null;
+    }
+
+    public Node ELSE(){
+        return null;
+    }
+
+    public Node THEN_EXISTE(){
+        return null;
+    }
+
+    public Node VAL(){
+        return null;
+    }
+
+    public Node PRIO_1(){
+        return null;
+    }
+
+    public Node PRIO_1_SUITE(){
+        return null;
+    }
+
+    public Node PRIO_1_OP(){
+        return null;
+    }
+
+    public Node PRIO_2(){
+        return null;
+    }
+    
+    public Node PRIO_2_SUITE(){
+        return null;
+    }
+    
+    public Node PRIO_2_OP(){
+        return null;
+    }
+    
+    public Node PRIO_3(){
+        return null;
+    }
+    
+    public Node PRIO_3_SUITE(){
+        return null;
+    }
+    
+    public Node PRIO_3_OP(){
+        return null;
+    }
+    
+    public Node PRIO_4(){
+        return null;
+    }
+    
+    public Node PRIO_4_SUITE(){
+        return null;
+    }
+    
+    public Node PRIO_4_OP(){
+        return null;
+    }
+    
+    public Node PRIO_5(){
+        return null;
+    }
+    
+    public Node PRIO_5_SUITE(){
+        return null;
+    }
+    
+    public Node PRIO_5_OP(){
+        return null;
+    }
+    
+    public Node PRIO_6(){
+        return null;
+    }
+    
+    public Node PRIO_6_SUITE(){
+        return null;
+    }
+    
+    public Node PRIO_6_OP(){
+        return null;
+    }
+
+    public Node PRIO_6_OP_SUITE(){
+        return null;
+    }
+    
+    public Node PRIO_7(){
+        return null;
+    }
+    
+    public Node PRIO_7_SUITE(){
+        return null;
+    }
+    
+    public Node PRIO_7_OP(){
+        return null;
+    }
+
+    public Node PRIO_7_OP_SUITE(){
         return null;
     }
 
@@ -415,12 +609,42 @@ public class Syntaxer {
         return null;
     }
 
-    public ArrayList<Node> INSTR_PLUS() {
+
+    public ArrayList<Node> IDENT_PLUS(){
         return null;
     }
+    
 
     private Node IDENT_EXISTE() {
         return null;
+    }
+
+    public ArrayList<Node> IDENT_SUITE() {
+        return null;
+    }
+
+    public Node IDENT_FIN() {
+        return null;
+    }
+
+    public Node INT() {
+        return null;
+    }
+
+    public Node CARAC() {
+        return null;
+    }
+
+    public Node REVERSE_EXISTE() {
+        return null;
+    }
+
+    //pour les tests
+    public void setTokens(ArrayDeque<Token> tokens) {
+        this.tokens = tokens;
+    }
+    public void addToken(Token token) {
+        this.tokens.addLast(token);
     }
 
 }
