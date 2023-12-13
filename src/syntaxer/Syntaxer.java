@@ -632,12 +632,17 @@ public class Syntaxer {
 
 
     public ArrayList<Node> IDENT_PLUS() throws SyntaxException {
-        ArrayList<Node> identPlus = new ArrayList<>();
-        Node ident = IDENT();
-        ArrayList<Node> identSuite = IDENT_SUITE();
-        identPlus.add(ident);
-        identPlus.addAll(identSuite);
-        return identPlus;
+        if (tokens.peek().getTag() == Tag.ID) {
+            ArrayList<Node> identPlus = new ArrayList<>();
+            Node ident = IDENT();
+            ArrayList<Node> identSuite = IDENT_SUITE();
+            identPlus.add(ident);
+            identPlus.addAll(identSuite);
+            return identPlus;
+        }else{
+            throw new SyntaxException("Expected IDENT, found: " + tokens.peek().toString());
+        }
+        
     }
     
     private Node IDENT_EXISTE() throws SyntaxException {
