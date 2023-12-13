@@ -630,22 +630,50 @@ public class Syntaxer {
     }
 
 
-    public ArrayList<Node> IDENT_PLUS(){
-        return null;
+
+    public ArrayList<Node> IDENT_PLUS() throws SyntaxException {
+        ArrayList<Node> identPlus = new ArrayList<>();
+        Node ident = IDENT();
+        ArrayList<Node> identSuite = IDENT_SUITE();
+        identPlus.add(ident);
+        identPlus.addAll(identSuite);
+        return identPlus;
+    }
+    
+    private Node IDENT_EXISTE() throws SyntaxException {
+        Node identExiste = new Node("IDENT_EXISTE");
+        if (tokens.peek().getTag() == Tag.ID) {
+            identExiste.addChild(IDENT());
+        }
+        return identExiste;
     }
     
 
-    private Node IDENT_EXISTE() {
-        return null;
+    public ArrayList<Node> IDENT_SUITE() throws SyntaxException {
+        ArrayList<Node> identSuite = new ArrayList<>();
+        while (tokens.peek().getTag() == Tag.OP) {
+            tokens.poll(); 
+            identSuite.addAll(IDENT_PLUS());
+        }
+        return identSuite;
     }
-
-    public ArrayList<Node> IDENT_SUITE() {
-        return null;
+    
+    public Node IDENT_FIN() throws SyntaxException {
+        Node identFin = new Node("IDENT_FIN");
+        if (tokens.peek().getTag() == Tag.OP) {
+            tokens.poll(); 
+            ArrayList<Node> exprPlus = EXPR_PLUS();
+            for (Node expr : exprPlus) {
+                identFin.addChild(expr);
+            }
+            Token currentToken = tokens.poll();
+            if (currentToken.getTag() != Tag.OP) {
+                throw new SyntaxException("Expected ')', found: " + currentToken.toString());
+            }
+        }
+        return identFin;
     }
-
-    public Node IDENT_FIN() {
-        return null;
-    }
+    
 
     public Node INT() {
         return null;
