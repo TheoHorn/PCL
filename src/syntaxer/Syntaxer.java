@@ -668,9 +668,7 @@ public class Syntaxer {
         if (tokens.peek().getTag() == Tag.OP) {
             tokens.poll(); 
             ArrayList<Node> exprPlus = EXPR_PLUS();
-            for (Node expr : exprPlus) {
-                identFin.addChild(expr);
-            }
+            identFin.addChildren(exprPlus);
             Token currentToken = tokens.poll();
             if (currentToken.getTag() != Tag.OP) {
                 throw new SyntaxException("Expected ')', found: " + currentToken.toString());
