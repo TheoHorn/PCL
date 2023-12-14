@@ -1,5 +1,8 @@
 package syntaxer;
 import java.util.*;
+
+import javax.swing.JPopupMenu.Separator;
+
 import lexer.*;
 
 
@@ -645,10 +648,14 @@ public class Syntaxer {
         
     }
     
-    private Node IDENT_EXISTE() throws SyntaxException {
+    public Node IDENT_EXISTE() throws SyntaxException {
         Node identExiste = new Node("IDENT_EXISTE");
         if (tokens.peek().getTag() == Tag.ID) {
             identExiste.addChild(IDENT());
+        }else if (tokens.peek().getTag() == Tag.SEPARATOR && ((Word) tokens.peek()).getValue().equals(";")) {
+            // on ne fait rien car on est dans le cas epsilon
+        }else{
+            throw new SyntaxException("Expected IDENT or ';', found: " + tokens.peek().toString());
         }
         return identExiste;
     }
@@ -656,9 +663,15 @@ public class Syntaxer {
 
     public ArrayList<Node> IDENT_SUITE() throws SyntaxException {
         ArrayList<Node> identSuite = new ArrayList<>();
-        while (tokens.peek().getTag() == Tag.OP) {
+        Token currentToken = tokens.peek();
+        Tag currentTag = tokens.peek().getTag();
+        if (currentTag == Tag.SEPARATOR && ((Word) currentToken).getValue().equals(",")) {
             tokens.poll(); 
             identSuite.addAll(IDENT_PLUS());
+        }else if (currentTag == Tag.OP && ((Operator) currentToken).getValue().equals("def")) {
+            // on ne fait rien car on est dans le cas epsilon
+        }else{
+            throw new SyntaxException("Expected ',' or ':', found: " + currentToken.toString());
         }
         return identSuite;
     }
