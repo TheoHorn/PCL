@@ -699,14 +699,35 @@ public class Syntaxer {
     
     public Node IDENT_FIN() throws SyntaxException {
         Node identFin = new Node("IDENT_FIN");
-        if (tokens.peek().getTag() == Tag.OP) {
+        Token currentToken = tokens.peek();
+        Tag currentTag = currentToken.getTag();
+
+        if (currentTag == Tag.OP && ((Operator) currentToken).getValue().equals("lpa")) {
             tokens.poll(); 
             ArrayList<Node> exprPlus = EXPR_PLUS();
             identFin.addChildren(exprPlus);
-            Token currentToken = tokens.poll();
-            if (currentToken.getTag() != Tag.OP) {
+            currentToken = tokens.poll();
+            currentTag = currentToken.getTag();
+            if (currentTag == Tag.OP && ((Operator) currentToken).getValue().equals("rpa")) {
+                // on ne fait rien car on est dans le cas epsilon
+            }else{
                 throw new SyntaxException("Expected ')', found: " + currentToken.toString());
             }
+        }else if (currentTag == Tag.OP){
+            String val = ((Operator) currentToken).getValue();
+            if (val.equals("-u") || val.equals("(") || val.equals("not") || val.equals("afc") || val.equals("def")){
+                throw new SyntaxException("Expected IDENT, found: " + currentToken.toString());
+            }else{
+                // on ne fait rien car on est dans le cas epsilon
+            }
+        }else if (currentTag == Tag.SEPARATOR && ((Word) currentToken).getValue().equals(";")) {
+            // on ne fait rien car on est dans le cas epsilon
+        }else if (currentTag == Tag.SEPARATOR && ((Word) currentToken).getValue().equals(",")) {
+            // on ne fait rien car on est dans le cas epsilon
+        }else if (currentTag == Tag.END || currentTag == Tag.RETURN || currentTag == Tag.ELSE || currentTag == Tag.ELSIF || currentTag == Tag.THEN || currentTag == Tag.LOOP || currentTag == Tag.BEGIN || currentTag == Tag.IF || currentTag == Tag.WHILE || currentTag == Tag.FOR || currentTag == Tag.ID) {
+            // on ne fait rien car on est dans le cas epsilon
+        }else{
+            throw new SyntaxException("Expected an other token, found: " + currentToken.toString());
         }
         return identFin;
     }
