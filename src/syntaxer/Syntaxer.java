@@ -416,8 +416,29 @@ public class Syntaxer {
         return champ_suite;
     }
 
-    public Node TYPE() {
-        return null;
+    public Node TYPE() throws SyntaxException {
+        Node type = new Node("TYPE");
+        Token currentToken = tokens.peek();
+        Tag currentTag = currentToken.getTag();
+        if (currentTag == Tag.ID){
+            Node ident = IDENT();
+            type.addChild(ident);
+            }
+        else if (currentTag == Tag.ACCESS){
+            currentToken = tokens.poll();
+            currentTag = currentToken.getTag();
+            if (currentTag == Tag.ID){
+                Node ident = IDENT();
+                type.addChild(ident);
+                }
+            else{
+                throw new SyntaxException(currentToken.toString());
+                }
+            }
+        else{ 
+            throw new SyntaxException(currentToken.toString());
+            }
+        return type;
     }
 
     public ArrayList<Node> PARAMS() {

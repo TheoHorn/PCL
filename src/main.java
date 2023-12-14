@@ -4,7 +4,7 @@ import java.io.File;
 
 public class main {
     public static void main(String[] args) {
-        File f = new File("src\\test.txt");
+        File f = new File("src/test.txt");
     
         Lexer l = new Lexer(f);
         try {
