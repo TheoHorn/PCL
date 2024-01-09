@@ -1,9 +1,11 @@
 package syntaxer;
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
 
-import javax.swing.JPopupMenu.Separator;
-
-import lexer.*;
+import lexer.Operator;
+import lexer.Tag;
+import lexer.Token;
+import lexer.Word;
 
 
 
@@ -438,67 +440,191 @@ public class Syntaxer {
                 throw new SyntaxException(currentToken.toString());
                 }
             }
-        else{ 
+        else{
             throw new SyntaxException(currentToken.toString());
             }
         return type;
     }
 
-    public ArrayList<Node> PARAMS() {
-        return null;
+    public ArrayList<Node> PARAMS() throws SyntaxException {
+        ArrayList<Node> params = new ArrayList<>();
+        Token currentToken = tokens.poll(); // Consommer '('
+    
+        if (!(currentToken instanceof Operator && ((Operator) currentToken).getValue().equals("lpa"))) {
+            throw new SyntaxException("Expected '(', found: " + currentToken.toString());
+        }
+    
+        params.addAll(PARAMS_PLUS());
+    
+        currentToken = tokens.poll(); // Consommer ')'
+        if (!(currentToken instanceof Operator && ((Operator) currentToken).getValue().equals("rpa"))) {
+            throw new SyntaxException("Expected ')', found: " + currentToken.toString());
+        }
+    
+        return params;
+    }
+    
+    
+    
+
+    public Node PARAMS_EXISTE() throws SyntaxException {
+        Node paramsExiste = new Node("PARAMS_EXISTE");
+        Token currentToken = tokens.peek();
+        if (currentToken instanceof Operator && ((Operator) currentToken).getValue().equals("lpa")) {
+            paramsExiste.addChildren(PARAMS());
+        }
+        return paramsExiste;
+    }
+    
+
+    public ArrayList<Node> PARAMS_PLUS() throws SyntaxException {
+        ArrayList<Node> paramsPlus = new ArrayList<>();
+        paramsPlus.add(PARAM());
+        paramsPlus.addAll(PARAMS_SUITE());
+        return paramsPlus;
+    }
+    
+
+    public ArrayList<Node> PARAMS_SUITE() throws SyntaxException {
+        ArrayList<Node> paramsSuite = new ArrayList<>();
+        while (tokens.peek() instanceof Operator && ((Operator) tokens.peek()).getValue().equals("def")) {
+            tokens.poll(); // Consommer ';'
+            paramsSuite.addAll(PARAMS_PLUS());
+        }
+        return paramsSuite;
     }
 
-    public Node PARAMS_EXISTE() {
-        return null;
-    }
 
-    public ArrayList<Node> PARAMS_PLUS() {
-        return null;
+    public Node PARAM() throws SyntaxException {
+        Node param = new Node("PARAM");
+        ArrayList<Node> identPlus = IDENT_PLUS();
+    
+        Token currentToken = tokens.poll(); // Consommer ':'
+        if (!(currentToken instanceof Operator && ((Operator) currentToken).getValue().equals("def"))) {
+            throw new SyntaxException("Expected ':', found: " + currentToken.toString());
+        }
+    
+        Node type = TYPE();
+        param.addChildren(identPlus);
+        param.addChild(type);
+    
+        return param;
     }
+    
 
-    public ArrayList<Node> PARAMS_SUITE(){
-        return null;
+    public Node MODE_EXISTE() throws SyntaxException {
+        Node modeExiste = new Node("MODE_EXISTE");
+        Token currentToken = tokens.peek();
+        if (currentToken instanceof Operator) {
+            String opValue = ((Operator) currentToken).getValue();
+            if (opValue.equals("in")) {
+                modeExiste.addChild(MODE());
+            }
+        }
+        // Le cas epsilon est géré implicitement
+        return modeExiste;
     }
+    
 
-    public Node PARAM(){
-        return null;
+    public Node MODE() throws SyntaxException {
+        Node mode = new Node("MODE");
+        Token currentToken = tokens.poll();
+    
+        if (currentToken instanceof Operator) {
+            String opValue = ((Operator) currentToken).getValue();
+            if (opValue.equals("in")) {
+                mode.addChild(new Node("in"));
+                Node outExiste = OUT_EXISTE();
+                if (outExiste != null) {
+                    mode.addChild(outExiste);
+                }
+            } else {
+                throw new SyntaxException("Expected 'in', found: " + currentToken.toString());
+            }
+        } else {
+            throw new SyntaxException("Expected 'in', found: " + currentToken.toString());
+        }
+    
+        return mode;
     }
+    
 
-    public Node MODE_EXISTE(){
+    public Node OUT_EXISTE() throws SyntaxException {
+        Token currentToken = tokens.peek();
+        if (currentToken instanceof Operator && ((Operator) currentToken).getValue().equals("out")) {
+            tokens.poll(); // Consommer 'out'
+            return new Node("out");
+        }
+        // Le cas epsilon est géré implicitement
         return null;
     }
+    
 
-    public Node MODE(){
-        return null;
+    public Node AFFECT_EXISTE() throws SyntaxException {
+        Node affectExiste = new Node("AFFECT_EXISTE");
+        Token currentToken = tokens.peek();
+        if (currentToken instanceof Operator && ((Operator) currentToken).getValue().equals("afc")) {
+            affectExiste.addChild(AFFECT());
+        }
+        // Le cas epsilon est géré implicitement
+        return affectExiste;
     }
+    
+    public Node AFFECT() throws SyntaxException {
+        Node affect = new Node("AFFECT");
+        Token currentToken = tokens.poll();
+    
+        if (currentToken instanceof Operator && ((Operator) currentToken).getValue().equals("afc")) {
+            affect.addChild(new Node(":="));
+            Node expr = EXPR();
+            affect.addChild(expr);
+        } else {
+            throw new SyntaxException("Expected ':=', found: " + currentToken.toString());
+        }
+    
+        return affect;
+    }
+    
 
-    public Node OUT_EXISTE(){
-        return null;
+    public Node EXPR() throws SyntaxException {
+        // Supposons que PRIO_7 est le niveau de priorité le plus bas dans vos expressions
+        return PRIO_7();
     }
+    
 
-    public Node AFFECT_EXISTE(){
-        return null;
+    public ArrayList<Node> EXPR_PLUS() throws SyntaxException {
+        ArrayList<Node> exprPlus = new ArrayList<>();
+        exprPlus.add(EXPR());
+        exprPlus.addAll(EXPR_SUITE());
+        return exprPlus;
     }
+    
 
-    public Node AFFECT(){
-        return null;
+    public ArrayList<Node> EXPR_SUITE() throws SyntaxException {
+        ArrayList<Node> exprSuite = new ArrayList<>();
+        while (tokens.peek() instanceof Operator && ((Operator) tokens.peek()).getValue().equals("comma")) {
+            tokens.poll(); // Consommer ','
+            exprSuite.add(EXPR());
+        }
+        return exprSuite;
     }
+    
 
-    public Node EXPR(){
-        return null;
-    }
+    // PAS SUR DU TOUT POUR CELLE LA LOL :
+    public Node EXPR_EXISTE() throws SyntaxException {
+        Node exprExiste = new Node("EXPR_EXISTE");
+        Token currentToken = tokens.peek();
+    
+        if (currentToken instanceof Word || currentToken instanceof Operator ||
+            currentToken.getTag() == Tag.NUM || currentToken.getTag() == Tag.CHAR) {
 
-    public ArrayList<Node> EXPR_PLUS(){
-        return null;
+            exprExiste.addChild(EXPR());
+        }
+        // Le cas epsilon est géré implicitement si aucun des cas ci-dessus n'est vrai
+        return exprExiste;
     }
-
-    public ArrayList<Node> EXPR_SUITE(){
-        return null;
-    }
-
-    public Node EXPR_EXISTE(){
-        return null;
-    }
+    
+    
 
     public ArrayList<Node> INSTR_PLUS(){
         return null;
@@ -687,7 +813,7 @@ public class Syntaxer {
         Token currentToken = tokens.peek();
         Tag currentTag = tokens.peek().getTag();
         if (currentTag == Tag.SEPARATOR && ((Word) currentToken).getValue().equals(",")) {
-            tokens.poll(); 
+            tokens.poll();
             identSuite.addAll(IDENT_PLUS());
         }else if (currentTag == Tag.OP && ((Operator) currentToken).getValue().equals("def")) {
             // on ne fait rien car on est dans le cas epsilon
@@ -703,7 +829,7 @@ public class Syntaxer {
         Tag currentTag = currentToken.getTag();
 
         if (currentTag == Tag.OP && ((Operator) currentToken).getValue().equals("lpa")) {
-            tokens.poll(); 
+            tokens.poll();
             ArrayList<Node> exprPlus = EXPR_PLUS();
             identFin.addChildren(exprPlus);
             currentToken = tokens.poll();

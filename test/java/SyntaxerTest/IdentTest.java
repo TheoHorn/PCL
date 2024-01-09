@@ -1,6 +1,9 @@
 package SyntaxerTest;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.util.ArrayList;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -11,9 +14,6 @@ import lexer.Word;
 import syntaxer.Node;
 import syntaxer.SyntaxException;
 import syntaxer.Syntaxer;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
-import java.util.ArrayList;
 
 public class IdentTest {
 
@@ -21,7 +21,7 @@ public class IdentTest {
 
     @Before
     public void init() throws Exception {
-        syntaxer = new Syntaxer();   
+        syntaxer = new Syntaxer();
     }
     
     @Test
