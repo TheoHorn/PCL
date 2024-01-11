@@ -626,13 +626,25 @@ public class Syntaxer {
     
     
 
-    public ArrayList<Node> INSTR_PLUS(){
-        return null;
+    public ArrayList<Node> INSTR_PLUS() throws SyntaxException {
+        ArrayList<Node> instrPlus = new ArrayList<>();
+        do {
+            instrPlus.add(INSTR());
+            // Supposons que les instructions sont séparées par des ';'
+        } while (tokens.peek() instanceof Operator && ((Operator) tokens.peek()).getValue().equals("semicolon"));
+        return instrPlus;
     }
+    
 
-    public ArrayList<Node> INSTR_SUITE(){
-        return null;
+    public ArrayList<Node> INSTR_SUITE() throws SyntaxException {
+        ArrayList<Node> instrSuite = new ArrayList<>();
+        while (tokens.peek() instanceof Operator && ((Operator) tokens.peek()).getValue().equals("semicolon")) {
+            tokens.poll(); // Consommer ';'
+            instrSuite.add(INSTR());
+        }
+        return instrSuite;
     }
+    
 
     public Node INSTR(){
         return null;
@@ -650,25 +662,59 @@ public class Syntaxer {
         return null;
     }
 
-    public ArrayList<Node> ELSEIF_MULT(){
-        return null;
+    public ArrayList<Node> ELSEIF_MULT() throws SyntaxException {
+        ArrayList<Node> elseifMult = new ArrayList<>();
+        while (tokens.peek() instanceof Word && ((Word) tokens.peek()).getValue().equals("elsif")) {
+            elseifMult.add(ELSEIF());
+        }
+        return elseifMult;
     }
+    
 
-    public Node ELSEIF(){
-        return null;
+    public Node ELSEIF() throws SyntaxException {
+        Node elseif = new Node("ELSEIF");
+        tokens.poll(); // Consommer 'elsif'
+        elseif.addChild(EXPR()); // Ajouter la condition
+        if (tokens.peek() instanceof Word && ((Word) tokens.peek()).getValue().equals("then")) {
+            tokens.poll(); // Consommer 'then'
+            elseif.addChild(INSTR_PLUS()); // Ajouter le corps de la branche
+        }
+        return elseif;
     }
+    
 
-    public Node ELSE_EXISTE(){
-        return null;
-    }
 
-    public Node ELSE(){
-        return null;
-    }
+    
 
-    public Node THEN_EXISTE(){
-        return null;
+    public Node ELSE_EXISTE() throws SyntaxException {
+        Node elseExiste = new Node("ELSE_EXISTE");
+        if (tokens.peek() instanceof Word && ((Word) tokens.peek()).getValue().equals("else")) {
+            elseExiste.addChild(ELSE());
+        }
+        return elseExiste;
     }
+    
+
+    public Node ELSE() throws SyntaxException {
+        Node elseNode = new Node("ELSE");
+        tokens.poll(); // Consommer 'else'
+        elseNode.addChild(INSTR_PLUS()); // Ajouter le corps de la branche
+        return elseNode;
+    }
+    
+    
+
+    public Node THEN_EXISTE() throws SyntaxException {
+        Node thenExiste = new Node("THEN_EXISTE");
+        Token currentToken = tokens.peek();
+    
+        if (currentToken instanceof Word && ((Word) currentToken).getValue().equals("then")) {
+            tokens.poll(); // Consommer 'then'
+            thenExiste.addChild(new Node("then")); // Ajouter le nœud 'then'
+        }
+        return thenExiste;
+    }
+    
 
     public Node VAL(){
         return null;
