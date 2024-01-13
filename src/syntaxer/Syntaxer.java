@@ -698,7 +698,7 @@ public class Syntaxer {
             instr.addChild(EXPR());
             THEN_EXISTE();
             instr.addChildren(INSTR_PLUS());
-            instr.addChildren(ELSEIF_MULT());
+            instr.addChild(ELSEIF_MULT());
             ELSE_EXISTE();
             currentToken = tokens.poll(); // Consommer 'end'
             currentTag = currentToken.getTag();
@@ -767,23 +767,29 @@ public class Syntaxer {
         return null;
     }
 
-    public ArrayList<Node> ELSEIF_MULT() throws SyntaxException {
-        ArrayList<Node> elseifMult = new ArrayList<>();
-        while (tokens.peek().getTag() == Tag.ID && ((Word) tokens.peek()).getValue().equals("elsif")) {
-            elseifMult.add(ELSEIF());
+    public Node ELSEIF_MULT() throws SyntaxException {
+        Node node = new Node("ELSEIF_MULT");
+        Token currentToken = tokens.peek();
+        Tag currentTag = currentToken.getTag();
+        if (currentTag == Tag.ELSIF) {
+            node = ELSEIF();
+        }else if (!(currentTag == Tag.END || currentTag == Tag.ELSE)) {
+            throw new SyntaxException("Expected 'end' or 'else', found: " + currentToken.toString());
         }
-        return elseifMult;
+        return node;
     }
     
 
     public Node ELSEIF() throws SyntaxException {
         Node elseif = new Node("ELSEIF");
-        tokens.poll(); // Consommer 'elsif'
-        elseif.addChild(EXPR()); // Ajouter la condition
-        if (tokens.peek().getTag() == Tag.ID && ((Word) tokens.peek()).getValue().equals("then")) {
-            tokens.poll(); // Consommer 'then'
-            elseif.addChildren(INSTR_PLUS()); // Ajouter le corps de la branche
+        Token currentToken = tokens.poll(); // Consommer 'elsif'
+        Tag currentTag = currentToken.getTag();
+        if (!(currentTag == Tag.ELSIF)) {
+            throw new SyntaxException("Expected 'elif', found: " + currentToken.toString());
         }
+        elseif.addChild(EXPR()); // Ajouter la condition
+        THEN_EXISTE();
+        elseif.addChildren(INSTR_PLUS());
         return elseif;
     }
     
