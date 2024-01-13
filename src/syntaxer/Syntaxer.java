@@ -715,22 +715,115 @@ public class Syntaxer {
         return thenExiste;
     }
     
+/////////////////////////////////////////////////////////////
 
-    public Node VAL(){
-        return null;
+    public Node VAL() throws SyntaxException {
+        Node val = new Node("VAL");
+        Token currentToken = tokens.peek();
+    
+        switch (currentToken.getTag()) {
+            case OP:
+        Operator opToken = (Operator) currentToken;
+        switch (opToken.getValue()) {
+            case "lpa": // '('
+                tokens.poll(); // Consommer '('
+                val.addChild(PRIO_7());
+                currentToken = tokens.poll();
+                if (!(currentToken instanceof Operator && ((Operator) currentToken).getValue().equals("rpa"))) {
+                    throw new SyntaxException("Expected ')', found: " + currentToken.toString());
+                }
+                break;
+            case "afc": // ':='
+                // Gérer l'opérateur ':=' si nécessaire dans le contexte de VAL
+                break;
+        }
+        break;
+            case ID:
+                val.addChild(IDENT());
+                val.addChild(IDENT_FIN());
+                break;
+            case NUM:
+                tokens.poll(); // Consommer le token
+                val.addChild(new Node("NUM", ((Word) currentToken).getValue()));
+                break;
+            case CHAR:
+                tokens.poll(); // Consommer le token
+                val.addChild(new Node("CHAR", ((Word) currentToken).getValue()));
+                break;
+            case TRUE:
+            case FALSE:
+            case NULL:
+                tokens.poll(); // Consommer le token
+                val.addChild(new Node(currentToken.getTag().toString()));
+                break;
+            case NEW:
+                tokens.poll(); // Consommer 'new'
+                val.addChild(new Node("new"));
+                val.addChild(IDENT());
+                break;
+            default:
+                throw new SyntaxException("Unexpected token for VAL: " + currentToken.toString());
+            }
+            
+            return VAL;
+            
     }
 
-    public Node PRIO_1(){
-        return null;
+        public Node PRIO_1() throws SyntaxException {
+            Node prio1 = new Node("PRIO_1");
+            Node valNode = VAL();  // Gérer les valeurs basiques
+            prio1.addChild(valNode);
+        
+            while (tokens.peek() instanceof Operator) {
+                Operator op = (Operator) tokens.peek();
+                if (op.getValue().equals("acs")) { // Par exemple, '.' pour l'accès à un champ
+                    tokens.poll(); // Consommer l'opérateur
+                    Node suivant = VAL(); // Supposons que l'accès à un champ est suivi par une autre valeur
+                    prio1.addChild(suivant);
+                } else {
+                    break; // Sortir de la boucle si l'opérateur n'est pas de priorité 1
+                }
+            }
+        
+            return prio1;
+        }
+        
+
+    public Node PRIO_1_SUITE(Node leftOperand) throws SyntaxException {
+        Node prio1Suite = new Node("PRIO_1_SUITE");
+        prio1Suite.addChild(leftOperand);
+
+        while (tokens.peek() instanceof Operator) {
+            Operator op = (Operator) tokens.peek();
+            if (op.getValue().equals("acs")) { // Vérifier si l'opérateur est '.'
+                tokens.poll(); // Consommer l'opérateur '.'
+                Node rightOperand = PRIO_1(); // Récupérer l'opérande de droite
+                Node operationNode = new Node("Operation");
+                operationNode.addChild(prio1Suite);
+                operationNode.addChild(rightOperand);
+                prio1Suite = operationNode;
+            } else {
+                break; // Sortir de la boucle si l'opérateur n'est pas un opérateur de PRIO_1_SUITE
+            }
+        }
+
+        return prio1Suite;
     }
 
-    public Node PRIO_1_SUITE(){
-        return null;
-    }
 
-    public Node PRIO_1_OP(){
-        return null;
+    public Node PRIO_1_OP() throws SyntaxException {
+        Token currentToken = tokens.peek();
+        if (currentToken instanceof Operator) {
+            Operator op = (Operator) currentToken;
+            if (op.getValue().equals("acs")) { // Vérifier si l'opérateur est '.'
+                tokens.poll(); // Consommer l'opérateur
+                return new Node(".");
+            }
+            // Ajoutez des cas pour d'autres opérateurs de priorité 1 si nécessaire
+        }
+        throw new SyntaxException("Expected a PRIO_1 operator, found: " + currentToken.toString());
     }
+    
 
     public Node PRIO_2(){
         return null;
