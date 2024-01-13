@@ -681,12 +681,82 @@ public class Syntaxer {
     }
     
 
-    public Node INSTR(){
-
+    public Node INSTR() throws SyntaxException {
+        Node instr = new Node("INSTR");
+        Token currentToken = tokens.peek();
+        Tag currentTag = currentToken.getTag();
+        if (currentTag == Tag.BEGIN){
+            tokens.poll(); // Consommer 'begin'
+            instr.addChildren(INSTR_PLUS());
+            currentToken = tokens.poll(); // Consommer 'end'
+            currentTag = currentToken.getTag();
+            if (!(currentTag == Tag.END)){
+                throw new SyntaxException("Expected 'end', found: " + currentToken.toString());
+            }
+        }else if (currentTag == Tag.IF){
+            tokens.poll(); // Consommer 'if'
+            instr.addChild(EXPR());
+            THEN_EXISTE();
+            instr.addChildren(INSTR_PLUS());
+            instr.addChildren(ELSEIF_MULT());
+            ELSE_EXISTE();
+            currentToken = tokens.poll(); // Consommer 'end'
+            currentTag = currentToken.getTag();
+            if (!(currentTag == Tag.END)){
+                throw new SyntaxException("Expected 'end', found: " + currentToken.toString());
+            }
+            currentToken = tokens.poll(); // Consommer 'if'
+            currentTag = currentToken.getTag();
+            if (!(currentTag == Tag.IF)){
+                throw new SyntaxException("Expected 'if', found: " + currentToken.toString());
+            }
+        }else if(currentTag == Tag.FOR){
+            tokens.poll(); // Consommer 'for'
+            instr.addChild(IDENT());
+            currentToken = tokens.poll(); // Consommer 'in'
+            currentTag = currentToken.getTag();
+            if (!(currentTag == Tag.IN)){
+                throw new SyntaxException("Expected 'in', found: " + currentToken.toString());
+            }
+            REVERSE_EXISTE();
+            instr.addChild(EXPR());
+            currentToken = tokens.poll(); // Consommer '..'
+            currentTag = currentToken.getTag();
+            if (!(currentTag == Tag.OP && ((Operator) currentToken).getValue().equals("adr"))){
+                throw new SyntaxException("Expected '..', found: " + currentToken.toString());
+            }
+            instr.addChild(LOOP());
+        }else if(currentTag == Tag.WHILE) {
+            tokens.poll(); // Consommer 'while'
+            instr.addChild(LOOP());
+        }else if(currentTag == Tag.ID) {
+            instr.addChild(IDENT());
+            instr.addChild(INSTR_FIN());
+        }
+        return instr;
     }
 
-    public Node INSTR_FIN(){
-        return null;
+    public Node INSTR_FIN() throws SyntaxException {
+        Node instrFin = new Node("INSTR_FIN");
+        Token currentToken = tokens.peek();
+        Tag currentTag = currentToken.getTag();
+        if(currentTag == Tag.OP){
+            if(((Operator) currentToken).getValue().equals("lpa")){
+                tokens.poll(); // Consommer '('
+                instrFin.addChildren(EXPR_PLUS());
+                currentToken = tokens.poll(); // Consommer ')'
+                currentTag = currentToken.getTag();
+                if (!(currentTag == Tag.OP && ((Operator) currentToken).getValue().equals("rpa"))) {
+                    throw new SyntaxException("Expected ')', found: " + currentToken.toString());
+                }
+            }else if(((Operator) currentToken).getValue().equals("afc")) {
+                tokens.poll(); // Consommer ':='
+                instrFin.addChild(EXPR());
+            }
+        }else if (! (currentTag == Tag.SEPARATOR && ((Word) currentToken).getValue().equals(";"))){
+            throw new SyntaxException("Expected ';', found: " + currentToken.toString());
+        }
+        return instrFin;
     }
 
     public Node RETURN(){
@@ -753,54 +823,54 @@ public class Syntaxer {
 /////////////////////////////////////////////////////////////
 
     public Node VAL() throws SyntaxException {
-        Node val = new Node("VAL");
-        Token currentToken = tokens.peek();
-    
-        switch (currentToken.getTag()) {
-            case OP:
-        Operator opToken = (Operator) currentToken;
-        switch (opToken.getValue()) {
-            case "lpa": // '('
-                tokens.poll(); // Consommer '('
-                val.addChild(PRIO_7());
-                currentToken = tokens.poll();
-                Tag currentTag = currentToken.getTag();
-                if (!(currentTag == Tag.OP && ((Operator) currentToken).getValue().equals("rpa"))) {
-                    throw new SyntaxException("Expected ')', found: " + currentToken.toString());
-                }
-                break;
-            case "afc": // ':='
-                // Gérer l'opérateur ':=' si nécessaire dans le contexte de VAL
-                break;
-        }
-        break;
-            case ID:
-                val.addChild(IDENT());
-                val.addChild(IDENT_FIN());
-                break;
-            case NUM:
-                tokens.poll(); // Consommer le token
-                val.addChild(new Node(((Word) currentToken).getValue()));
-                break;
-            case CHAR:
-                tokens.poll(); // Consommer le token
-                val.addChild(new Node(((Word) currentToken).getValue()));
-                break;
-            case TRUE:
-            case FALSE:
-            case NULL:
-                tokens.poll(); // Consommer le token
-                val.addChild(new Node(currentToken.getTag().toString()));
-                break;
-            case NEW:
-                tokens.poll(); // Consommer 'new'
-                val.addChild(new Node("new"));
-                val.addChild(IDENT());
-                break;
-            default:
-                throw new SyntaxException("Unexpected token for VAL: " + currentToken.toString());
+            Node val = new Node("VAL");
+            Token currentToken = tokens.peek();
+
+            switch (currentToken.getTag()) {
+                case OP:
+                    Operator opToken = (Operator) currentToken;
+                    switch (opToken.getValue()) {
+                        case "lpa": // '('
+                            tokens.poll(); // Consommer '('
+                            val.addChild(PRIO_7());
+                            currentToken = tokens.poll();
+                            Tag currentTag = currentToken.getTag();
+                            if (!(currentTag == Tag.OP && ((Operator) currentToken).getValue().equals("rpa"))) {
+                                throw new SyntaxException("Expected ')', found: " + currentToken.toString());
+                            }
+                            break;
+                        case "afc": // ':='
+                            // Gérer l'opérateur ':=' si nécessaire dans le contexte de VAL
+                            break;
+                    }
+                    break;
+                case ID:
+                    val.addChild(IDENT());
+                    val.addChild(IDENT_FIN());
+                    break;
+                case NUM:
+                    tokens.poll(); // Consommer le token
+                    val.addChild(new Node(((Word) currentToken).getValue()));
+                    break;
+                case CHAR:
+                    tokens.poll(); // Consommer le token
+                    val.addChild(new Node(((Word) currentToken).getValue()));
+                    break;
+                case TRUE:
+                case FALSE:
+                case NULL:
+                    tokens.poll(); // Consommer le token
+                    val.addChild(new Node(currentToken.getTag().toString()));
+                    break;
+                case NEW:
+                    tokens.poll(); // Consommer 'new'
+                    val.addChild(new Node("new"));
+                    val.addChild(IDENT());
+                    break;
+                default:
+                    throw new SyntaxException("Unexpected token for VAL: " + currentToken.toString());
             }
-            
+
             return val;
     }
 
