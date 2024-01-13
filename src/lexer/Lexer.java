@@ -56,6 +56,7 @@ public class Lexer {
         this.reserve(new Word(Tag.ACCESS,"access"));
         this.reserve(new Word(Tag.AND,"and"));
         this.reserve(new Word(Tag.BEGIN,"begin"));
+        this.reserve(new Word(Tag.CHARACTERVAL,"character'val"));
         this.reserve(new Word(Tag.ELSE,"else"));
         this.reserve(new Word(Tag.ELSIF,"elsif"));
         this.reserve(new Word(Tag.END,"end"));
@@ -135,7 +136,7 @@ public class Lexer {
                 }// If the character is a letter, we read the whole word
                  else if(Character.isLetter(c)){
                     StringBuilder s = new StringBuilder();
-                    while (Character.isLetterOrDigit(c) || c == '_'){
+                    while (Character.isLetterOrDigit(c) || c == '_' || c == '\''){
                         s.append(c);
                         i++;
                         if (i < line.length()){
@@ -145,6 +146,10 @@ public class Lexer {
                         }
                     }
                     String str = s.toString();
+                    //if the word contains an apostrophe and is not character'val, we throw an exception
+                    if (str.contains("'") && !str.equals("character'val")){
+                        throw new Exception("Error at line " + line_number + " : " + str + " is not a valid word");
+                    }
                     // If the word is a reserved keyword, we add it to the tokens with the corresponding tag
                     if (this.words.containsKey(str)){
                         this.tokens.addLast(this.words.get(str));

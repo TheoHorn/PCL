@@ -2,11 +2,7 @@ package syntaxer;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 
-import lexer.Operator;
-import lexer.Tag;
-import lexer.Token;
-import lexer.Word;
-
+import lexer.*;
 
 
 public class Syntaxer {
@@ -618,17 +614,23 @@ public class Syntaxer {
     }
     
 
-    // PAS SUR DU TOUT POUR CELLE LA LOL :
     public Node EXPR_EXISTE() throws SyntaxException {
         Node exprExiste = new Node("EXPR_EXISTE");
         Token currentToken = tokens.peek();
         Tag currentTag = currentToken.getTag();
-        if (currentTag == Tag.ID|| currentTag == Tag.OP ||
-            currentToken.getTag() == Tag.NUM || currentToken.getTag() == Tag.CHAR) {
-
-            exprExiste.addChild(EXPR());
+        if (currentTag == Tag.OP || currentTag == Tag.TRUE || currentTag == Tag.FALSE || currentTag == Tag.NULL || currentTag == Tag.NEW || currentTag == Tag.CHARACTERVAL || currentTag == Tag.NOT || currentTag == Tag.ID || currentTag == Tag.NUM || currentTag == Tag.CHAR) {
+            if (currentTag == Tag.OP) {
+                String opValue = ((Operator) currentToken).getValue();
+                if(opValue.equals("lpa") || opValue.equals("-u")){
+                    exprExiste.addChild(EXPR());
+                }
+            } else {
+                exprExiste.addChild(EXPR());
+            }
+        }else if (!(currentTag == Tag.END || currentTag == Tag.ELSIF || currentTag == Tag.ELSE)){
+            //si le prochain token n'est pas dans le cas epsilon
+            throw new SyntaxException("Expected an expression, found: " + currentToken.toString());
         }
-        // Le cas epsilon est géré implicitement si aucun des cas ci-dessus n'est vrai
         return exprExiste;
     }
     
@@ -636,26 +638,51 @@ public class Syntaxer {
 
     public ArrayList<Node> INSTR_PLUS() throws SyntaxException {
         ArrayList<Node> instrPlus = new ArrayList<>();
-        do {
+        Token currentToken = tokens.peek();
+        Tag currentTag = currentToken.getTag();
+        if (currentTag == Tag.BEGIN || currentTag == Tag.IF || currentTag == Tag.FOR || currentTag ==Tag.WHILE || currentTag ==Tag.ID){
             instrPlus.add(INSTR());
-            // Supposons que les instructions sont séparées par des ';'
-        } while (tokens.peek().getTag() == Tag.SEPARATOR && ((Operator) tokens.peek()).getValue().equals(";"));
+            currentToken = tokens.poll(); // Consommer ';'
+            currentTag = currentToken.getTag();
+            if (currentTag == Tag.SEPARATOR && ((Operator) currentToken).getValue().equals(";")){
+                instrPlus.addAll(INSTR_SUITE());
+            }else{
+                throw new SyntaxException("Expected ';', found: " + currentToken.toString());
+            }
+        }else if (currentTag == Tag.RETURN){
+            tokens.poll(); // Consommer 'return'
+            instrPlus.add(RETURN());
+        }else{
+            throw new SyntaxException("Expected an instruction, found: " + currentToken.toString());
+        }
         return instrPlus;
     }
     
 
     public ArrayList<Node> INSTR_SUITE() throws SyntaxException {
         ArrayList<Node> instrSuite = new ArrayList<>();
-        while (tokens.peek().getTag() == Tag.SEPARATOR && ((Operator) tokens.peek()).getValue().equals(";")) {
-            tokens.poll(); // Consommer ';'
+        Token currentToken = tokens.peek();
+        Tag currentTag = currentToken.getTag();
+        if (currentTag == Tag.BEGIN || currentTag == Tag.IF || currentTag == Tag.FOR || currentTag ==Tag.WHILE || currentTag ==Tag.ID){
             instrSuite.add(INSTR());
+            currentToken = tokens.poll(); // Consommer ';'
+            currentTag = currentToken.getTag();
+            if (!(currentTag == Tag.SEPARATOR && ((Operator) currentToken).getValue().equals(";"))){
+                throw new SyntaxException("Expected ';', found: " + currentToken.toString());
+            }
+        }else if (currentTag == Tag.RETURN){
+            tokens.poll(); // Consommer 'return'
+            instrSuite.add(RETURN());
+        }else if (!(currentTag == Tag.END || currentTag == Tag.ELSIF || currentTag == Tag.ELSE)){
+            //si le prochain token n'est pas dans le cas epsilon
+            throw new SyntaxException("Expected an instruction, found: " + currentToken.toString());
         }
         return instrSuite;
     }
     
 
     public Node INSTR(){
-        return null;
+
     }
 
     public Node INSTR_FIN(){
@@ -1007,12 +1034,24 @@ public class Syntaxer {
     }
     
 
-    public Node INT() {
-        return null;
+    public Node INT() throws SyntaxException {
+        Token token = tokens.poll();
+        Tag tag = token.getTag();
+        if (tag == Tag.NUM) {
+            return new Node(String.valueOf(((Num) token).getValue()));
+        }else{
+            throw new SyntaxException("Expected an INT, found: " + token.toString());
+        }
     }
 
-    public Node CARAC() {
-        return null;
+    public Node CARAC() throws SyntaxException {
+        Token token = tokens.poll();
+        Tag tag = token.getTag();
+        if (tag == Tag.CHAR) {
+            return new Node(String.valueOf(((Char) token).getValue()));
+        }else{
+            throw new SyntaxException("Expected a CHAR, found: " + token.toString());
+        }
     }
 
     public Node REVERSE_EXISTE() {
