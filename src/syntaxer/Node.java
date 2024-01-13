@@ -12,11 +12,15 @@ public class Node {
     }
 
     public void addChild(Node type) {
-        this.children.add(type);
+        if (type != null){
+            this.children.add(type);
+        }
     }
 
-    public void addChildren(ArrayList<Node> children) {
-        this.children.addAll(children);
+    public void addChild(ArrayList<Node> children) {
+        for (Node child : children) {
+            this.addChild(child);
+        }
     }
 
     public void removeChild(Node child) {

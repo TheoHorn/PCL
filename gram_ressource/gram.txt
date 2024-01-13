@@ -88,7 +88,7 @@ VAL -> false
 VAL -> null
 VAL -> new IDENT
 VAL -> character'val ( EXPR )
-VAL -> 1 val
+VAL -> 1 VAL
 
 PRIO_1 -> VAL PRIO_1_SUITE
 PRIO_1_SUITE -> PRIO_1_OP PRIO_1
