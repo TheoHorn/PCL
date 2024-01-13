@@ -23,6 +23,18 @@ public class Node {
         }
     }
 
+    public void addChildToFront(Node child) {
+        if (child != null) {
+            this.children.add(0, child);
+        }
+    }
+
+    public void addChildToFront(ArrayList<Node> children) {
+        for (int i = children.size() - 1; i >= 0; i--) {
+            this.addChildToFront(children.get(i));
+        }
+    }
+
     public void removeChild(Node child) {
         this.children.remove(child);
     }

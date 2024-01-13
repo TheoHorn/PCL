@@ -47,6 +47,29 @@ public class Operator extends Token{
         };
     }
 
+    public String getOp(){
+        return switch (value) {
+            case "add" -> "+";
+            case "sub" -> "-";
+            case "neg" -> "-u";
+            case "mul" -> "*";
+            case "div" -> "/";
+            case "res" -> "/=";
+            case "eq" -> "=";
+            case "lt" -> "<";
+            case "gt" -> ">";
+            case "le" -> "<=";
+            case "ge" -> ">=";
+            case "def" -> ":";
+            case "afc" -> ":=";
+            case "acs" -> ".";
+            case "adr" -> "..";
+            case "lpa" -> "(";
+            case "rpa" -> ")";
+            default -> "unknown";
+        };
+    }
+
     @Override
     public String toString() {
         return "Operator{" +
