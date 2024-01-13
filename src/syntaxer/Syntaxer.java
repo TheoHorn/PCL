@@ -685,7 +685,7 @@ public class Syntaxer {
         elseif.addChild(EXPR()); // Ajouter la condition
         if (tokens.peek().getTag() == Tag.ID && ((Word) tokens.peek()).getValue().equals("then")) {
             tokens.poll(); // Consommer 'then'
-            elseif.addChild(INSTR_PLUS()); // Ajouter le corps de la branche
+            elseif.addChildren(INSTR_PLUS()); // Ajouter le corps de la branche
         }
         return elseif;
     }
@@ -706,7 +706,7 @@ public class Syntaxer {
     public Node ELSE() throws SyntaxException {
         Node elseNode = new Node("ELSE");
         tokens.poll(); // Consommer 'else'
-        elseNode.addChild(INSTR_PLUS()); // Ajouter le corps de la branche
+        elseNode.addChildren(INSTR_PLUS()); // Ajouter le corps de la branche
         return elseNode;
     }
     
@@ -737,6 +737,7 @@ public class Syntaxer {
                 tokens.poll(); // Consommer '('
                 val.addChild(PRIO_7());
                 currentToken = tokens.poll();
+                Tag currentTag = currentToken.getTag();
                 if (!(currentTag == Tag.OP && ((Operator) currentToken).getValue().equals("rpa"))) {
                     throw new SyntaxException("Expected ')', found: " + currentToken.toString());
                 }
@@ -752,11 +753,11 @@ public class Syntaxer {
                 break;
             case NUM:
                 tokens.poll(); // Consommer le token
-                val.addChild(new Node("NUM", ((Word) currentToken).getValue()));
+                val.addChild(new Node(((Word) currentToken).getValue()));
                 break;
             case CHAR:
                 tokens.poll(); // Consommer le token
-                val.addChild(new Node("CHAR", ((Word) currentToken).getValue()));
+                val.addChild(new Node(((Word) currentToken).getValue()));
                 break;
             case TRUE:
             case FALSE:
@@ -773,8 +774,7 @@ public class Syntaxer {
                 throw new SyntaxException("Unexpected token for VAL: " + currentToken.toString());
             }
             
-            return VAL;
-            
+            return val;
     }
 
         public Node PRIO_1() throws SyntaxException {
@@ -821,6 +821,7 @@ public class Syntaxer {
 
     public Node PRIO_1_OP() throws SyntaxException {
         Token currentToken = tokens.peek();
+        Tag currentTag = currentToken.getTag();
         if (currentTag == Tag.OP) {
             Operator op = (Operator) currentToken;
             if (op.getValue().equals("acs")) { // Vérifier si l'opérateur est '.'
