@@ -1,4 +1,5 @@
 package syntaxer;
+import java.io.*;
 import java.util.ArrayList;
 
 public class Node {
@@ -53,6 +54,21 @@ public class Node {
 
     public String getName() {
         return this.name;
+    }
+
+    public void toGraphviz(StringBuilder s) throws IOException {
+
+        s.append("digraph G {\n");
+        for (Node child : this.children) {
+            s.append(this.name).append(" -> ").append(child.getName()).append("\n");
+            child.toGraphviz(s);
+        }
+        s.append("}");
+        BufferedWriter writer = new BufferedWriter(new FileWriter(new File("arbre.dot")));
+        writer.write(String.valueOf(s));
+
+        writer.close();
+
     }
 
     public String toString() {
