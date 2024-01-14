@@ -1221,47 +1221,226 @@ public class Syntaxer {
         }
     }
     
-    public Node PRIO_5(){
+    public Node PRIO_5() throws SyntaxException {
+        Token currentToken = tokens.peek();
+        Tag currentTag = currentToken.getTag();
+        if (currentTag == Tag.TRUE || currentTag == Tag.FALSE || currentTag == Tag.NULL || currentTag == Tag.NEW || currentTag == Tag.CHARACTERVAL || currentTag == Tag.ID || currentTag == Tag.NUM || currentTag == Tag.CHAR || currentTag == Tag.OP){
+            if (currentTag == Tag.OP) {
+                String opValue = ((Operator) currentToken).getValue();
+                if (opValue.equals("lpa") || opValue.equals("-u")) {
+                    Node node = PRIO_4();
+                    node.addChild(PRIO_5_SUITE());
+                    return node;
+                } else {
+                    throw new SyntaxException("Expected a correct expression, found: " + currentToken.toString());
+                }
+            }else{
+                Node node = PRIO_4();
+                node.addChild(PRIO_5_SUITE());
+                return node;
+            }
+        }else if (currentTag == Tag.NOT){
+            tokens.poll(); //consommer Not
+            Node not = new Node("not");
+            Node node = PRIO_4();
+            node.addChild(PRIO_5_SUITE());
+            not.addChild(node);
+            return node;
+        }
+        else{
+            throw new SyntaxException("Expected a correct expression, found: " + currentToken);
+        }
+
+    }
+    
+    public Node PRIO_5_SUITE() throws SyntaxException {
+        Token currentToken = tokens.peek();
+        Tag currentTag = currentToken.getTag();
+        if (currentTag == Tag.OP) {
+            String opValue = ((Operator) currentToken).getValue();
+            if (opValue.equals("eq") || opValue.equals("res")) {
+                Node prio3 = PRIO_5_OP();
+                prio3.addChild(PRIO_5());
+                return prio3;
+            }else if (!(opValue.equals("rpa") || opValue.equals("adr") )){
+                throw new SyntaxException("Expected a correct expression, found: " + currentToken);
+            }
+        }else if (currentTag == Tag.SEPARATOR){
+            String opValue = ((Word) currentToken).getValue();
+            if (!(opValue.equals(";") || opValue.equals(","))){
+                throw new SyntaxException("Expected a correct expression, found: " + currentToken);
+            }
+        }else if (!(currentTag == Tag.END || currentTag == Tag.RETURN || currentTag == Tag.BEGIN || currentTag == Tag.IF || currentTag == Tag.FOR || currentTag ==Tag.WHILE || currentTag ==Tag.LOOP || currentTag == Tag.ELSIF || currentTag == Tag.ELSE || currentTag == Tag.THEN || currentTag == Tag.AND || currentTag == Tag.OR || currentTag == Tag.ID)) {
+            throw new SyntaxException("Expected a correct expression, found: " + currentToken);
+        }
         return null;
     }
     
-    public Node PRIO_5_SUITE(){
+    public Node PRIO_5_OP() throws SyntaxException {
+        Token currentToken = tokens.poll(); // Consommer '=' ou '/='
+        Tag currentTag = currentToken.getTag();
+        if (currentTag == Tag.OP && ((Operator) currentToken).getValue().equals("eq") || ((Operator) currentToken).getValue().equals("res")) {
+            return new Node(((Operator) currentToken).getOp());
+        } else {
+            throw new SyntaxException("Expected '=' or '/=', found: " + currentToken);
+        }
+    }
+    
+    public Node PRIO_6() throws SyntaxException{
+        Token currentToken = tokens.peek();
+        Tag currentTag = currentToken.getTag();
+        if (currentTag == Tag.TRUE || currentTag == Tag.FALSE || currentTag == Tag.NULL || currentTag == Tag.NEW || currentTag == Tag.CHARACTERVAL || currentTag == Tag.ID || currentTag == Tag.NUM || currentTag == Tag.CHAR || currentTag == Tag.OP || currentTag == Tag.NOT) {
+            if (currentTag == Tag.OP) {
+                String opValue = ((Operator) currentToken).getValue();
+                if (opValue.equals("lpa") || opValue.equals("-u")) {
+                    Node node = PRIO_5();
+                    node.addChild(PRIO_6_SUITE());
+                    return node;
+                } else {
+                    throw new SyntaxException("Expected a correct expression, found: " + currentToken.toString());
+                }
+            } else {
+                Node node = PRIO_5();
+                node.addChild(PRIO_6_SUITE());
+                return node;
+            }
+        }else{
+            throw new SyntaxException("Expected a correct expression, found: " + currentToken);
+        }
+    }
+    
+    public Node PRIO_6_SUITE() throws SyntaxException {
+        Token currentToken = tokens.peek();
+        Tag currentTag = currentToken.getTag();
+        if (currentTag == Tag.OP) {
+            String opValue = ((Operator) currentToken).getValue();
+            if (!(opValue.equals("rpa") || opValue.equals("adr"))) {
+                throw new SyntaxException("Expected a correct expression, found: " + currentToken);
+            }
+        }else if(currentTag == Tag.AND){
+            Node prio6 = PRIO_6_OP();
+            prio6.addChild(PRIO_6());
+            return prio6;
+        }else if (currentTag == Tag.SEPARATOR){
+            String opValue = ((Word) currentToken).getValue();
+            if (!(opValue.equals(";") || opValue.equals(","))){
+                throw new SyntaxException("Expected a correct expression, found: " + currentToken);
+            }
+        }else if (!(currentTag == Tag.END || currentTag == Tag.RETURN || currentTag == Tag.BEGIN || currentTag == Tag.IF || currentTag == Tag.FOR || currentTag ==Tag.WHILE || currentTag ==Tag.LOOP || currentTag == Tag.ELSIF || currentTag == Tag.ELSE || currentTag == Tag.THEN || currentTag == Tag.OR || currentTag == Tag.ID)) {
+            throw new SyntaxException("Expected a correct expression, found: " + currentToken);
+        }
         return null;
     }
     
-    public Node PRIO_5_OP(){
-        return null;
-    }
-    
-    public Node PRIO_6(){
-        return null;
-    }
-    
-    public Node PRIO_6_SUITE(){
-        return null;
-    }
-    
-    public Node PRIO_6_OP(){
-        return null;
+    public Node PRIO_6_OP() throws SyntaxException {
+        Token currentToken = tokens.poll(); // Consommer 'and'
+        Tag currentTag = currentToken.getTag();
+        if (currentTag == Tag.AND){
+            Node node = new Node("and");
+            node.addChild(PRIO_6_OP_SUITE());
+            return node;
+        }else{
+            throw new SyntaxException("Expected 'and', found: " + currentToken);
+        }
     }
 
-    public Node PRIO_6_OP_SUITE(){
+    public Node PRIO_6_OP_SUITE() throws SyntaxException {
+        Token currentToken = tokens.peek();
+        Tag currentTag = currentToken.getTag();
+        if (currentTag == Tag.OP) {
+            String opValue = ((Operator) currentToken).getValue();
+            if (!(opValue.equals("rpa") || opValue.equals("adr"))) {
+                throw new SyntaxException("Expected a correct expression, found: " + currentToken);
+            }
+        }else if(currentTag == Tag.THEN){
+            tokens.poll(); // Consommer 'then'
+        }else if (currentTag == Tag.SEPARATOR){
+            String opValue = ((Word) currentToken).getValue();
+            if (!(opValue.equals(";") || opValue.equals(","))){
+                throw new SyntaxException("Expected a correct expression, found: " + currentToken);
+            }
+        }else if (!(currentTag == Tag.END || currentTag == Tag.RETURN || currentTag == Tag.BEGIN || currentTag == Tag.IF || currentTag == Tag.FOR || currentTag ==Tag.WHILE || currentTag ==Tag.LOOP || currentTag == Tag.ELSIF || currentTag == Tag.ELSE || currentTag == Tag.OR || currentTag == Tag.ID)) {
+            throw new SyntaxException("Expected a correct expression, found: " + currentToken);
+        }
         return null;
     }
     
-    public Node PRIO_7(){
+    public Node PRIO_7() throws SyntaxException {
+        Token currentToken = tokens.peek();
+        Tag currentTag = currentToken.getTag();
+        if (currentTag == Tag.TRUE || currentTag == Tag.FALSE || currentTag == Tag.NULL || currentTag == Tag.NEW || currentTag == Tag.CHARACTERVAL || currentTag == Tag.ID || currentTag == Tag.NUM || currentTag == Tag.CHAR || currentTag == Tag.OP || currentTag == Tag.NOT) {
+            if (currentTag == Tag.OP) {
+                String opValue = ((Operator) currentToken).getValue();
+                if (opValue.equals("lpa") || opValue.equals("-u")) {
+                    Node node = PRIO_6();
+                    node.addChild(PRIO_7_SUITE());
+                    return node;
+                } else {
+                    throw new SyntaxException("Expected a correct expression, found: " + currentToken.toString());
+                }
+            } else {
+                Node node = PRIO_6();
+                node.addChild(PRIO_7_SUITE());
+                return node;
+            }
+        }else{
+            throw new SyntaxException("Expected a correct expression, found: " + currentToken);
+        }
+    }
+    
+    public Node PRIO_7_SUITE() throws SyntaxException {
+        Token currentToken = tokens.peek();
+        Tag currentTag = currentToken.getTag();
+        if (currentTag == Tag.OP) {
+            String opValue = ((Operator) currentToken).getValue();
+            if (!(opValue.equals("rpa") || opValue.equals("adr"))) {
+                throw new SyntaxException("Expected a correct expression, found: " + currentToken);
+            }
+        }else if(currentTag == Tag.OR){
+            Node prio7 = PRIO_7_OP();
+            prio7.addChild(PRIO_7());
+            return prio7;
+        }else if (currentTag == Tag.SEPARATOR){
+            String opValue = ((Word) currentToken).getValue();
+            if (!(opValue.equals(";") || opValue.equals(","))){
+                throw new SyntaxException("Expected a correct expression, found: " + currentToken);
+            }
+        }else if (!(currentTag == Tag.END || currentTag == Tag.RETURN || currentTag == Tag.BEGIN || currentTag == Tag.IF || currentTag == Tag.FOR || currentTag ==Tag.WHILE || currentTag ==Tag.LOOP || currentTag == Tag.ELSIF || currentTag == Tag.ELSE || currentTag == Tag.THEN || currentTag == Tag.ID)) {
+            throw new SyntaxException("Expected a correct expression, found: " + currentToken);
+        }
         return null;
     }
     
-    public Node PRIO_7_SUITE(){
-        return null;
-    }
-    
-    public Node PRIO_7_OP(){
-        return null;
+    public Node PRIO_7_OP() throws SyntaxException {
+        Token currentToken = tokens.poll(); // Consommer 'or'
+        Tag currentTag = currentToken.getTag();
+        if (currentTag == Tag.OR){
+            Node node = new Node("or");
+            node.addChild(PRIO_7_OP_SUITE());
+            return node;
+        }else{
+            throw new SyntaxException("Expected 'or', found: " + currentToken);
+        }
     }
 
-    public Node PRIO_7_OP_SUITE(){
+    public Node PRIO_7_OP_SUITE() throws SyntaxException {
+        Token currentToken = tokens.peek();
+        Tag currentTag = currentToken.getTag();
+        if (currentTag == Tag.OP) {
+            String opValue = ((Operator) currentToken).getValue();
+            if (!(opValue.equals("rpa") || opValue.equals("adr"))) {
+                throw new SyntaxException("Expected a correct expression, found: " + currentToken);
+            }
+        }else if(currentTag == Tag.ELSE){
+            tokens.poll(); // Consommer 'then'
+        }else if (currentTag == Tag.SEPARATOR){
+            String opValue = ((Word) currentToken).getValue();
+            if (!(opValue.equals(";") || opValue.equals(","))){
+                throw new SyntaxException("Expected a correct expression, found: " + currentToken);
+            }
+        }else if (!(currentTag == Tag.END || currentTag == Tag.RETURN || currentTag == Tag.BEGIN || currentTag == Tag.IF || currentTag == Tag.FOR || currentTag ==Tag.WHILE || currentTag ==Tag.LOOP || currentTag == Tag.ELSIF || currentTag == Tag.OR || currentTag == Tag.ID)) {
+            throw new SyntaxException("Expected a correct expression, found: " + currentToken);
+        }
         return null;
     }
 
@@ -1378,9 +1557,21 @@ public class Syntaxer {
         }
     }
 
-    public Node REVERSE_EXISTE() {
+    public Node REVERSE_EXISTE() throws SyntaxException {
         Token currentToken = tokens.peek();
         Tag currentTag = currentToken.getTag();
+        if (currentTag == Tag.OP) {
+            String opValue = ((Operator) currentToken).getValue();
+            if (!(opValue.equals("lpa") || opValue.equals("-u"))) {
+                throw new SyntaxException("Expected a correct expression, found: " + currentToken);
+            }
+        }else if(currentTag == Tag.REVERSE){
+            tokens.poll(); // Consommer 'reverse'
+            return new Node("reverse");
+        }else if(!(currentTag == Tag.TRUE || currentTag == Tag.FALSE || currentTag == Tag.NULL || currentTag == Tag.NEW || currentTag == Tag.CHARACTERVAL || currentTag == Tag.ID || currentTag == Tag.NUM || currentTag == Tag.CHAR || currentTag == Tag.NOT)){
+            throw new SyntaxException("Expected a correct expression, found: " + currentToken);
+        }
+        return null;
     }
 
     //pour les tests
