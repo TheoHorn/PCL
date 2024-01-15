@@ -48,10 +48,10 @@ def produce(grammar, symbol):
     return words
 
 
-print(get_production())
+#print(get_production())
 grammar = CFG.fromstring(get_production())
-print(grammar)
+#print(grammar)
 
 
-for sentence in generate(grammar, depth=11, n=200):
+for sentence in generate(grammar, depth=7, n=200):
     print(' '.join(sentence))

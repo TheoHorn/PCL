@@ -19,6 +19,7 @@ public class Node {
     }
 
     public void addChild(ArrayList<Node> children) {
+        if (children == null) return;
         for (Node child : children) {
             this.addChild(child);
         }
@@ -31,6 +32,7 @@ public class Node {
     }
 
     public void addChildToFront(ArrayList<Node> children) {
+        if (children == null) return;
         for (int i = children.size() - 1; i >= 0; i--) {
             this.addChildToFront(children.get(i));
         }
@@ -56,19 +58,28 @@ public class Node {
         return this.name;
     }
 
-    public void toGraphviz(StringBuilder s) throws IOException {
+    public void generateGraphviz(String outputPath) {
+        StringBuilder dotCode = new StringBuilder("digraph G {\n");
+        generateDotCode(this, dotCode);
+        dotCode.append("}");
 
-        s.append("digraph G {\n");
-        for (Node child : this.children) {
-            s.append(this.name).append(" -> ").append(child.getName()).append("\n");
-            child.toGraphviz(s);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputPath))) {
+            writer.write(dotCode.toString());
+            System.out.println("Graphviz code has been written to: " + outputPath);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        s.append("}");
-        BufferedWriter writer = new BufferedWriter(new FileWriter(new File("arbre.dot")));
-        writer.write(String.valueOf(s));
+    }
 
-        writer.close();
+    private static void generateDotCode(Node node, StringBuilder dotCode) {
+        if (node != null) {
+            dotCode.append("  \"").append(node.name).append("\";\n");
 
+            for (Node child : node.children) {
+                dotCode.append("  \"").append(node.name).append("\" -> \"").append(child.name).append("\";\n");
+                generateDotCode(child, dotCode);
+            }
+        }
     }
 
     public String toString() {
