@@ -268,7 +268,7 @@ public class Syntaxer {
                     current_token = tokens.poll();
                     current_tag = current_token.getTag();
                     if(current_tag == Tag.BEGIN){
-                        ArrayList<Node> inst = INSTR_PLUS();
+                        Node inst = INSTR_PLUS();
                         current_token = tokens.poll();
                         current_tag = current_token.getTag();
                         if(current_tag == Tag.END){
@@ -281,7 +281,7 @@ public class Syntaxer {
                                 func.addChild(type);
                                 func.addChild(decl);
                                 func.addChild(inst);
-                                func.addChild(ident2);
+                                //func.addChild(ident2);
                             }else{
                                 throw new SyntaxException(current_token.toString());
                             }
@@ -318,7 +318,7 @@ public class Syntaxer {
                 current_token = tokens.poll();
                 current_tag = current_token.getTag();
                 if(current_tag == Tag.BEGIN){
-                    ArrayList<Node> inst = INSTR_PLUS();
+                    Node instr = INSTR_PLUS();
                     current_token = tokens.poll();
                     current_tag = current_token.getTag();
                     if(current_tag == Tag.END){
@@ -328,8 +328,8 @@ public class Syntaxer {
                         if(current_tag == Tag.SEPARATOR && ((Word) current_token).getValue().equals(";")){
                             proc.addChild(ident);
                             proc.addChild(decl);
-                            proc.addChild(inst);
-                            proc.addChild(ident2);
+                            proc.addChild(instr);
+                            //proc.addChild(ident2);
                         }else{
                             throw new SyntaxException(current_token.toString());
                         }
@@ -581,7 +581,7 @@ public class Syntaxer {
     }
     
     public Node AFFECT() throws SyntaxException {
-        Node affect = new Node("AFFECT");
+        Node affect = null;
         Token currentToken = tokens.poll(); // Consommer '('
         Tag currentTag = currentToken.getTag();
         if (currentTag == Tag.OP && ((Operator) currentToken).getValue().equals("lpa")) {
@@ -590,7 +590,7 @@ public class Syntaxer {
             if (!(currentTag == Tag.OP && ((Operator) currentToken).getValue().equals("afc"))) {
                 throw new SyntaxException("Expected ':=', found: " + currentToken.toString());
             }
-            affect.addChild(new Node(":="));
+            affect = new Node(":=");
             affect.addChild(EXPR());
             currentToken = tokens.poll(); // Consommer ')'
             currentTag = currentToken.getTag();
@@ -609,22 +609,20 @@ public class Syntaxer {
         //not, (, true, false, null, new, character'val, 1, idf, int, carac | ), ,, ;, return, begin, if, for, while, idf, then, .., loop, end, else, elif
         Token currentToken = tokens.peek();
         Tag currentTag = currentToken.getTag();
-        Node expr = new Node("EXPR");
         if (currentTag == Tag.OP || currentTag == Tag.TRUE || currentTag == Tag.FALSE || currentTag == Tag.NULL || currentTag == Tag.NEW || currentTag == Tag.CHARACTERVAL || currentTag == Tag.NOT || currentTag == Tag.ID || currentTag == Tag.NUM || currentTag == Tag.CHAR){
             if (currentTag == Tag.OP) {
                 String opValue = ((Operator) currentToken).getValue();
                 if (opValue.equals("lpa") || opValue.equals("-u")) {
-                    expr.addChild(PRIO_7());
+                    return PRIO_7();
                 }else{
                     throw new SyntaxException("Expected '(' or '-', found: " + currentToken.toString());
                 }
             }else{
-                expr.addChild(PRIO_7());
+                return PRIO_7();
             }
         }else{
             throw new SyntaxException("Expected an expression, found: " + currentToken.toString());
         }
-        return expr;
     }
     
 
@@ -651,7 +649,6 @@ public class Syntaxer {
     
 
     public Node EXPR_SUITE() throws SyntaxException {
-        Node exprSuite = new Node("EXPR_SUITE");
         Token currentToken = tokens.peek();
         Tag currentTag = currentToken.getTag();
         if (currentTag == Tag.OP){
@@ -668,7 +665,7 @@ public class Syntaxer {
                 return EXPR();
             }
         }
-        return exprSuite;
+        return null;
     }
     
 
@@ -693,22 +690,22 @@ public class Syntaxer {
     
     
 
-    public ArrayList<Node> INSTR_PLUS() throws SyntaxException {
-        ArrayList<Node> instrPlus = new ArrayList<>();
+    public Node INSTR_PLUS() throws SyntaxException {
+        Node instrPlus = new Node("INSTR");
         Token currentToken = tokens.peek();
         Tag currentTag = currentToken.getTag();
         if (currentTag == Tag.BEGIN || currentTag == Tag.IF || currentTag == Tag.FOR || currentTag ==Tag.WHILE || currentTag ==Tag.ID){
-            instrPlus.add(INSTR());
+            instrPlus.addChild(INSTR());
             currentToken = tokens.poll(); // Consommer ';'
             currentTag = currentToken.getTag();
             if (currentTag == Tag.SEPARATOR && ((Word) currentToken).getValue().equals(";")){
-                instrPlus.addAll(INSTR_SUITE());
+                instrPlus.addChild(INSTR_SUITE());
             }else{
                 throw new SyntaxException("Expected ';', found: " + currentToken.toString());
             }
         }else if (currentTag == Tag.RETURN){
             tokens.poll(); // Consommer 'return'
-            instrPlus.add(RETURN());
+            instrPlus.addChild(RETURN());
         }else{
             throw new SyntaxException("Expected an instruction, found: " + currentToken.toString());
         }
@@ -739,11 +736,12 @@ public class Syntaxer {
     
 
     public Node INSTR() throws SyntaxException {
-        Node instr = new Node("INSTR");
+        Node instr = null;
         Token currentToken = tokens.peek();
         Tag currentTag = currentToken.getTag();
         if (currentTag == Tag.BEGIN){
             tokens.poll(); // Consommer 'begin'
+            instr = new Node("BEGIN");
             instr.addChild(INSTR_PLUS());
             currentToken = tokens.poll(); // Consommer 'end'
             currentTag = currentToken.getTag();
@@ -752,6 +750,7 @@ public class Syntaxer {
             }
         }else if (currentTag == Tag.IF){
             tokens.poll(); // Consommer 'if'
+            instr = new Node("IF");
             instr.addChild(EXPR());
             THEN_EXISTE();
             instr.addChild(INSTR_PLUS());
@@ -769,6 +768,7 @@ public class Syntaxer {
             }
         }else if(currentTag == Tag.FOR){
             tokens.poll(); // Consommer 'for'
+            instr = new Node("FOR");
             instr.addChild(IDENT());
             currentToken = tokens.poll(); // Consommer 'in'
             currentTag = currentToken.getTag();
@@ -784,36 +784,43 @@ public class Syntaxer {
             }
             instr.addChild(LOOP());
         }else if(currentTag == Tag.WHILE) {
+            instr = new Node("WHILE");
             tokens.poll(); // Consommer 'while'
             instr.addChild(LOOP());
         }else if(currentTag == Tag.ID) {
-            instr.addChild(IDENT());
-            instr.addChild(INSTR_FIN());
+            instr = IDENT();
+            Node instrf = INSTR_FIN();
+            instrf.addChildToFront(instr);
+            return instrf;
         }
         return instr;
     }
 
-    public ArrayList<Node> INSTR_FIN() throws SyntaxException {
-        ArrayList<Node> instrFin = new ArrayList<>();
+    public Node INSTR_FIN() throws SyntaxException {
         Token currentToken = tokens.peek();
         Tag currentTag = currentToken.getTag();
         if(currentTag == Tag.OP){
             if(((Operator) currentToken).getValue().equals("lpa")){
                 tokens.poll(); // Consommer '('
-                instrFin.addAll(EXPR_PLUS());
+                currentToken = tokens.peek();
+                ArrayList<Node> expr = EXPR_PLUS();
+                Node node = new Node (((Word) currentToken).getValue());
                 currentToken = tokens.poll(); // Consommer ')'
                 currentTag = currentToken.getTag();
                 if (!(currentTag == Tag.OP && ((Operator) currentToken).getValue().equals("rpa"))) {
                     throw new SyntaxException("Expected ')', found: " + currentToken.toString());
                 }
+                return node;
             }else if(((Operator) currentToken).getValue().equals("afc")) {
                 tokens.poll(); // Consommer ':='
-                instrFin.add(EXPR());
+                Node node = new Node(":=");
+                node.addChild(EXPR());
+                return node;
             }
         }else if (! (currentTag == Tag.SEPARATOR && ((Word) currentToken).getValue().equals(";"))){
             throw new SyntaxException("Expected ';', found: " + currentToken.toString());
         }
-        return instrFin;
+        return null;
     }
 
     public Node RETURN() throws SyntaxException {
@@ -940,8 +947,8 @@ public class Syntaxer {
                         }
                     }else if(opToken.getValue().equals("-u")) {
                         tokens.poll(); // Consommer '-'
-                        Node node = new Node("-");
-                        val = VAL();
+                        val = new Node("-");
+                        val.addChild(VAL());
                     }else{
                         throw new SyntaxException("Expected '(' or '-', found: " + currentToken);
                     }
@@ -970,25 +977,24 @@ public class Syntaxer {
                     break;
                 case NEW:
                     tokens.poll(); // Consommer 'new'
-                    Node node = new Node("new");
-                    node.addChild(IDENT());
-                    val = node;
+                    val = new Node("new");
+                    val.addChild(IDENT());
+
                     break;
                 case CHARACTERVAL:
                     tokens.poll(); // Consommer le token
-                    node = new Node("characterVal");
+                    val = new Node("characterVal");
                     currentToken = tokens.poll(); // Consommer '('
                     currentTag = currentToken.getTag();
                     if (!(currentTag == Tag.OP && ((Operator) currentToken).getValue().equals("lpa"))) {
                         throw new SyntaxException("Expected '(', found: " + currentToken);
                     }
-                    node.addChild(EXPR());
+                    val.addChild(EXPR());
                     currentToken = tokens.poll(); // Consommer ')'
                     currentTag = currentToken.getTag();
                     if (!(currentTag == Tag.OP && ((Operator) currentToken).getValue().equals("rpa"))) {
                         throw new SyntaxException("Expected ')', found: " + currentToken);
                     }
-                    val = node;
                     break;
                 default:
                     throw new SyntaxException("Expected a correct expression, found: " + currentToken.toString());
@@ -1004,14 +1010,22 @@ public class Syntaxer {
                     String opValue = ((Operator) currentToken).getValue();
                     if (opValue.equals("lpa") || opValue.equals("-u")) {
                         Node node = VAL();
-                        node.addChild(PRIO_1_SUITE());
+                        Node prio = PRIO_1_SUITE();
+                        if (prio != null){
+                            prio.addChildToFront(node);
+                            return prio;
+                        }
                         return node;
                     } else {
                         throw new SyntaxException("Expected a correct expression, found: " + currentToken.toString());
                     }
                 }else{
                     Node node = VAL();
-                    node.addChild(PRIO_1_SUITE());
+                    Node prio = PRIO_1_SUITE();
+                    if (prio != null){
+                        prio.addChildToFront(node);
+                        return prio;
+                    }
                     return node;
                 }
             }else{
@@ -1062,14 +1076,22 @@ public class Syntaxer {
                 String opValue = ((Operator) currentToken).getValue();
                 if (opValue.equals("lpa") || opValue.equals("-u")) {
                     Node node = PRIO_1();
-                    node.addChild(PRIO_2_SUITE());
+                    Node prio = PRIO_2_SUITE();
+                    if (prio != null){
+                        prio.addChildToFront(node);
+                        return prio;
+                    }
                     return node;
                 } else {
                     throw new SyntaxException("Expected a correct expression, found: " + currentToken.toString());
                 }
             }else{
                 Node node = PRIO_1();
-                node.addChild(PRIO_2_SUITE());
+                Node prio = PRIO_2_SUITE();
+                if (prio != null){
+                    prio.addChildToFront(node);
+                    return prio;
+                }
                 return node;
             }
         }else{
@@ -1124,14 +1146,22 @@ public class Syntaxer {
                 String opValue = ((Operator) currentToken).getValue();
                 if (opValue.equals("lpa") || opValue.equals("-u")) {
                     Node node = PRIO_2();
-                    node.addChild(PRIO_3_SUITE());
+                    Node prio = PRIO_3_SUITE();
+                    if (prio != null){
+                        prio.addChildToFront(node);
+                        return prio;
+                    }
                     return node;
                 } else {
                     throw new SyntaxException("Expected a correct expression, found: " + currentToken.toString());
                 }
             }else{
                 Node node = PRIO_2();
-                node.addChild(PRIO_3_SUITE());
+                Node prio = PRIO_3_SUITE();
+                if (prio != null){
+                    prio.addChildToFront(node);
+                    return prio;
+                }
                 return node;
             }
         }else{
@@ -1180,14 +1210,22 @@ public class Syntaxer {
                 String opValue = ((Operator) currentToken).getValue();
                 if (opValue.equals("lpa") || opValue.equals("-u")) {
                     Node node = PRIO_3();
-                    node.addChild(PRIO_4_SUITE());
+                    Node prio = PRIO_4_SUITE();
+                    if (prio != null){
+                        prio.addChildToFront(node);
+                        return prio;
+                    }
                     return node;
                 } else {
                     throw new SyntaxException("Expected a correct expression, found: " + currentToken.toString());
                 }
             }else{
                 Node node = PRIO_3();
-                node.addChild(PRIO_4_SUITE());
+                Node prio = PRIO_4_SUITE();
+                if (prio != null){
+                    prio.addChildToFront(node);
+                    return prio;
+                }
                 return node;
             }
         }else{
@@ -1236,23 +1274,36 @@ public class Syntaxer {
                 String opValue = ((Operator) currentToken).getValue();
                 if (opValue.equals("lpa") || opValue.equals("-u")) {
                     Node node = PRIO_4();
-                    node.addChild(PRIO_5_SUITE());
+                    Node prio = PRIO_5_SUITE();
+                    if (prio != null){
+                        prio.addChildToFront(node);
+                        return prio;
+                    }
                     return node;
                 } else {
                     throw new SyntaxException("Expected a correct expression, found: " + currentToken.toString());
                 }
             }else{
                 Node node = PRIO_4();
-                node.addChild(PRIO_5_SUITE());
+                Node prio = PRIO_5_SUITE();
+                if (prio != null){
+                    prio.addChildToFront(node);
+                    return prio;
+                }
                 return node;
             }
         }else if (currentTag == Tag.NOT){
             tokens.poll(); //consommer Not
             Node not = new Node("not");
             Node node = PRIO_4();
-            node.addChild(PRIO_5_SUITE());
-            not.addChild(node);
-            return node;
+            Node prio = PRIO_5_SUITE();
+            if (prio != null){
+                prio.addChildToFront(node);
+                not.addChild(prio);
+            }else{
+                not.addChild(node);
+            }
+            return not;
         }
         else{
             throw new SyntaxException("Expected a correct expression, found: " + currentToken);
@@ -1301,21 +1352,29 @@ public class Syntaxer {
                 String opValue = ((Operator) currentToken).getValue();
                 if (opValue.equals("lpa") || opValue.equals("-u")) {
                     Node node = PRIO_5();
-                    node.addChild(PRIO_6_SUITE());
+                    Node prio = PRIO_6_SUITE();
+                    if (prio != null){
+                        prio.addChildToFront(node);
+                        return prio;
+                    }
                     return node;
                 } else {
                     throw new SyntaxException("Expected a correct expression, found: " + currentToken.toString());
                 }
             } else {
                 Node node = PRIO_5();
-                node.addChild(PRIO_6_SUITE());
+                Node prio = PRIO_6_SUITE();
+                if (prio != null){
+                    prio.addChildToFront(node);
+                    return prio;
+                }
                 return node;
             }
         }else{
             throw new SyntaxException("Expected a correct expression, found: " + currentToken);
         }
     }
-    
+
     public Node PRIO_6_SUITE() throws SyntaxException {
         Token currentToken = tokens.peek();
         Tag currentTag = currentToken.getTag();
@@ -1380,14 +1439,23 @@ public class Syntaxer {
                 String opValue = ((Operator) currentToken).getValue();
                 if (opValue.equals("lpa") || opValue.equals("-u")) {
                     Node node = PRIO_6();
-                    node.addChild(PRIO_7_SUITE());
+                    Node prio = PRIO_7_SUITE();
+                    if (prio != null){
+                        prio.addChildToFront(node);
+                        return prio;
+                    }
                     return node;
+
                 } else {
                     throw new SyntaxException("Expected a correct expression, found: " + currentToken.toString());
                 }
             } else {
                 Node node = PRIO_6();
-                node.addChild(PRIO_7_SUITE());
+                Node prio = PRIO_7_SUITE();
+                if (prio != null){
+                    prio.addChildToFront(node);
+                    return prio;
+                }
                 return node;
             }
         }else{
@@ -1423,7 +1491,7 @@ public class Syntaxer {
         Tag currentTag = currentToken.getTag();
         if (currentTag == Tag.OR){
             Node node = new Node("or");
-            node.addChild(PRIO_7_OP_SUITE());
+            PRIO_7_OP_SUITE();
             return node;
         }else{
             throw new SyntaxException("Expected 'or', found: " + currentToken);
@@ -1520,7 +1588,7 @@ public class Syntaxer {
             }
         }else if (currentTag == Tag.OP){
             String val = ((Operator) currentToken).getValue();
-            if (val.equals("-u") || val.equals("(") || val.equals("not") || val.equals("afc") || val.equals("def")){
+            if (val.equals("-u") || val.equals("not") || val.equals("afc") || val.equals("def")){
                 throw new SyntaxException("Expected IDENT, found: " + currentToken.toString());
             }else{
                 // on ne fait rien car on est dans le cas epsilon
@@ -1529,7 +1597,7 @@ public class Syntaxer {
             // on ne fait rien car on est dans le cas epsilon
         }else if (currentTag == Tag.SEPARATOR && ((Word) currentToken).getValue().equals(",")) {
             // on ne fait rien car on est dans le cas epsilon
-        }else if (currentTag == Tag.END || currentTag == Tag.RETURN || currentTag == Tag.ELSE || currentTag == Tag.ELSIF || currentTag == Tag.THEN || currentTag == Tag.LOOP || currentTag == Tag.BEGIN || currentTag == Tag.IF || currentTag == Tag.WHILE || currentTag == Tag.FOR || currentTag == Tag.ID) {
+        }else if (currentTag == Tag.END || currentTag == Tag.RETURN || currentTag == Tag.BEGIN || currentTag == Tag.ELSE || currentTag == Tag.ELSIF || currentTag == Tag.THEN || currentTag == Tag.LOOP || currentTag == Tag.IF || currentTag == Tag.WHILE || currentTag == Tag.FOR || currentTag == Tag.ID) {
             // on ne fait rien car on est dans le cas epsilon
         }else{
             throw new SyntaxException("Expected an other token, found: " + currentToken.toString());
