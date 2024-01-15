@@ -1,6 +1,7 @@
 package syntaxer;
 import java.io.*;
 import java.util.ArrayList;
+import com.google.gson.Gson;
 
 public class Node {
     private String name;
@@ -56,19 +57,13 @@ public class Node {
         return this.name;
     }
 
-    public void toGraphviz(StringBuilder s) throws IOException {
+    public void writeJSONToFile(Node ast, String fileName) throws IOException {
+        Gson gson = new Gson();
+        String json = gson.toJson(ast);
 
-        s.append("digraph G {\n");
-        for (Node child : this.children) {
-            s.append(this.name).append(" -> ").append(child.getName()).append("\n");
-            child.toGraphviz(s);
+        try (FileWriter writer = new FileWriter(fileName)) {
+            writer.write(json);
         }
-        s.append("}");
-        BufferedWriter writer = new BufferedWriter(new FileWriter(new File("arbre.dot")));
-        writer.write(String.valueOf(s));
-
-        writer.close();
-
     }
 
     public String toString() {

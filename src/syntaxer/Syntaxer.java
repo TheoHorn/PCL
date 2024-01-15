@@ -3,7 +3,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import com.google.gson.Gson;
 
 
 import lexer.*;
@@ -1584,15 +1583,6 @@ public class Syntaxer {
     }
     public void addToken(Token token) {
         this.tokens.addLast(token);
-    }
-
-    public void writeJSONToFile(Node ast, String fileName) throws IOException {
-        Gson gson = new Gson();
-        String json = gson.toJson(ast);
-
-        try (FileWriter writer = new FileWriter(fileName)) {
-            writer.write(json);
-        }
     }
 
 }
