@@ -59,9 +59,9 @@ public class Node {
         return this.name;
     }
 
-    public void writeJSONToFile(Node ast, String fileName) throws IOException {
+    public void writeJSONToFile(String fileName) throws IOException {
         Gson gson = new Gson();
-        String json = gson.toJson(ast);
+        String json = gson.toJson(this);
 
         try (FileWriter writer = new FileWriter(fileName)) {
             writer.write(json);

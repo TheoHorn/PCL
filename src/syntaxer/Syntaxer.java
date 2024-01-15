@@ -1,6 +1,4 @@
 package syntaxer;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 
@@ -426,19 +424,17 @@ public class Syntaxer {
     }
 
     public Node TYPE() throws SyntaxException {
-        Node type = new Node("TYPE");
         Token currentToken = tokens.peek();
         Tag currentTag = currentToken.getTag();
         if (currentTag == Tag.ID){
-            type.addChild(IDENT());
+            return IDENT();
             }
         else if (currentTag == Tag.ACCESS){
             tokens.poll(); // Consommer 'access'
-            type.addChild(IDENT());
+            return IDENT();
         }else{
             throw new SyntaxException(currentToken.toString());
         }
-        return type;
     }
 
     public ArrayList<Node> PARAMS() throws SyntaxException {
@@ -1456,16 +1452,13 @@ public class Syntaxer {
     }
 
     public Node IDENT() throws SyntaxException {
-        Node ident = new Node("IDENT");
         Token current_token = tokens.poll();
         Tag current_tag = current_token.getTag();
-
         if (current_tag == Tag.ID){
-            ident.addChild(new Node(((Word) current_token).getValue()));
+            return new Node(((Word) current_token).getValue());
         }else{
             throw new SyntaxException(current_token.toString());
         }
-        return ident;
     }
 
 
@@ -1485,42 +1478,39 @@ public class Syntaxer {
     }
     
     public Node IDENT_EXISTE() throws SyntaxException {
-        Node identExiste = new Node("IDENT_EXISTE");
         if (tokens.peek().getTag() == Tag.ID) {
-            identExiste.addChild(IDENT());
+            return IDENT();
         }else if (tokens.peek().getTag() == Tag.SEPARATOR && ((Word) tokens.peek()).getValue().equals(";")) {
             // on ne fait rien car on est dans le cas epsilon
         }else{
             throw new SyntaxException("Expected IDENT or ';', found: " + tokens.peek().toString());
         }
-        return identExiste;
+        return null;
     }
     
 
     public ArrayList<Node> IDENT_SUITE() throws SyntaxException {
-        ArrayList<Node> identSuite = new ArrayList<>();
         Token currentToken = tokens.peek();
         Tag currentTag = tokens.peek().getTag();
         if (currentTag == Tag.SEPARATOR && ((Word) currentToken).getValue().equals(",")) {
             tokens.poll();
-            identSuite.addAll(IDENT_PLUS());
+            return IDENT_PLUS();
         }else if (currentTag == Tag.OP && ((Operator) currentToken).getValue().equals("def")) {
             // on ne fait rien car on est dans le cas epsilon
         }else{
             throw new SyntaxException("Expected ',' or ':', found: " + currentToken.toString());
         }
-        return identSuite;
+        return new ArrayList<>();
     }
     
-    public Node IDENT_FIN() throws SyntaxException {
-        Node identFin = new Node("IDENT_FIN");
+    public ArrayList<Node> IDENT_FIN() throws SyntaxException {
+        ArrayList<Node> identFin = new ArrayList<>();
         Token currentToken = tokens.peek();
         Tag currentTag = currentToken.getTag();
 
         if (currentTag == Tag.OP && ((Operator) currentToken).getValue().equals("lpa")) {
             tokens.poll();
-            ArrayList<Node> exprPlus = EXPR_PLUS();
-            identFin.addChild(exprPlus);
+            identFin = EXPR_PLUS();
             currentToken = tokens.poll();
             currentTag = currentToken.getTag();
             if (currentTag == Tag.OP && ((Operator) currentToken).getValue().equals("rpa")) {

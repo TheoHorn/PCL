@@ -16,14 +16,13 @@ public class Main {
             return;
         }
         Syntaxer syntaxer = new Syntaxer(lexer.getTokens());
-        lexer.getTokens().forEach(System.out::println);
         try {
 
             Node ast = syntaxer.launch();
 
-            //syntaxer.writeJSONToFile(ast, "src/arbre.json");
+            ast.writeJSONToFile("src/arbre.json");
 
-            //System.out.println("json file written");
+            System.out.println("json file written");
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
