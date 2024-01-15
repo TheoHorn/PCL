@@ -20,6 +20,7 @@ public class Node {
     }
 
     public void addChild(ArrayList<Node> children) {
+        if (children == null) return;
         for (Node child : children) {
             this.addChild(child);
         }
@@ -32,6 +33,7 @@ public class Node {
     }
 
     public void addChildToFront(ArrayList<Node> children) {
+        if (children == null) return;
         for (int i = children.size() - 1; i >= 0; i--) {
             this.addChildToFront(children.get(i));
         }
@@ -65,6 +67,7 @@ public class Node {
             writer.write(json);
         }
     }
+
 
     public String toString() {
         StringBuilder s = new StringBuilder();

@@ -1,7 +1,7 @@
 with Ada.Text_IO ; use Ada.Text_IO ;
 procedure unDebut is
     function aireRectangle(larg : integer; long : integer) return integer is
-    aire: integer;
+    aire: integer ;
     begin
         aire := larg * long ;
     return aire        
@@ -10,7 +10,7 @@ procedure unDebut is
 
 
     function perimetreRectangle(larg : integer; long : integer) return integer is
-    p : integer
+    p : integer ;
     begin
         p := larg*2 + long*2 ;
     return p

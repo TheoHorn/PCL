@@ -180,6 +180,11 @@ public class Syntaxer {
             if(current_tag == Tag.OP && ((Operator) current_token).getValue().equals("def")){
                 Node type = TYPE();
                 Node affect_exist = AFFECT_EXISTE();
+                current_token = tokens.poll(); // Consommer ';'
+                current_tag = current_token.getTag();
+                if (!(current_tag == Tag.SEPARATOR && ((Word) current_token).getValue().equals(";"))) {
+                    throw new SyntaxException(current_token.toString());
+                }
                 decl.addChild(ident_plus);
                 decl.addChild(type);
                 decl.addChild(affect_exist);
@@ -700,7 +705,7 @@ public class Syntaxer {
             instrPlus.add(INSTR());
             currentToken = tokens.poll(); // Consommer ';'
             currentTag = currentToken.getTag();
-            if (currentTag == Tag.SEPARATOR && ((Operator) currentToken).getValue().equals(";")){
+            if (currentTag == Tag.SEPARATOR && ((Word) currentToken).getValue().equals(";")){
                 instrPlus.addAll(INSTR_SUITE());
             }else{
                 throw new SyntaxException("Expected ';', found: " + currentToken.toString());
@@ -723,7 +728,7 @@ public class Syntaxer {
             instrSuite.add(INSTR());
             currentToken = tokens.poll(); // Consommer ';'
             currentTag = currentToken.getTag();
-            if (!(currentTag == Tag.SEPARATOR && ((Operator) currentToken).getValue().equals(";"))){
+            if (!(currentTag == Tag.SEPARATOR && ((Word) currentToken).getValue().equals(";"))){
                 throw new SyntaxException("Expected ';', found: " + currentToken.toString());
             }
         }else if (currentTag == Tag.RETURN){
@@ -820,12 +825,15 @@ public class Syntaxer {
         Token currentToken = tokens.peek();
         Tag currentTag = currentToken.getTag();
         if (currentTag == Tag.END || currentTag == Tag.ELSIF || currentTag == Tag.ELSE || currentTag == Tag.TRUE || currentTag == Tag.FALSE || currentTag == Tag.NULL || currentTag == Tag.NEW || currentTag == Tag.CHARACTERVAL || currentTag == Tag.NOT || currentTag == Tag.ID || currentTag == Tag.NUM || currentTag == Tag.CHAR || currentTag == Tag.OP){
-            String opValue = ((Operator) currentToken).getValue();
-            if(opValue.equals("lpa") || opValue.equals("-u")){
-                returnNode.addChild(EXPR_EXISTE());
+            if (currentTag == Tag.OP){
+                 String opValue = ((Operator) currentToken).getValue();
+                if(opValue.equals("lpa") || opValue.equals("-u")){
+                    returnNode.addChild(EXPR_EXISTE());
+                }else{
+                    throw new SyntaxException("Expected an expression, found: " + currentToken.toString());
+                }
             }else{
-                throw new SyntaxException("Expected an expression, found: " + currentToken.toString());
-
+                returnNode.addChild(EXPR_EXISTE());
             }
         }
         return returnNode;
