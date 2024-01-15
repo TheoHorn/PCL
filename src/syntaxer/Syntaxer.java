@@ -61,7 +61,7 @@ public class Syntaxer {
         }
 
         //second token : Ada
-        if (current_tag == Tag.ID && ((Word) current_token).getValue()=="Ada"){
+        if (current_tag == Tag.ID && ((Word) current_token).getValue().equals("Ada")){
             current_token = this.tokens.poll();
             current_tag = current_token.getTag();
         }else{
@@ -101,7 +101,7 @@ public class Syntaxer {
         }
 
         //seventh token : Ada
-        if (current_tag == Tag.ID && ((Word) current_token).getValue()=="Ada"){
+        if (current_tag == Tag.ID && ((Word) current_token).getValue().equals("Ada")){
             current_token = this.tokens.poll();
             current_tag = current_token.getTag();
         }else{
@@ -117,7 +117,7 @@ public class Syntaxer {
         }
 
         //ninth token : Text_IO
-        if (current_tag == Tag.ID && ((Word) current_token).getValue()=="Text_IO"){
+        if (current_tag == Tag.ID && ((Word) current_token).getValue().equals("Text_IO")){
             current_token = this.tokens.poll();
             current_tag = current_token.getTag();
         }else{

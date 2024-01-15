@@ -4,7 +4,7 @@ import syntaxer.Syntaxer;
 
 import java.io.File;
 
-public class main {
+public class Main {
     public static void main(String[] args) throws Exception {
         File inputFile = new File("src/test.txt");
 
@@ -16,12 +16,14 @@ public class main {
             return;
         }
         Syntaxer syntaxer = new Syntaxer(lexer.getTokens());
+        lexer.getTokens().forEach(System.out::println);
         try {
+
             Node ast = syntaxer.launch();
 
-            syntaxer.writeJSONToFile(ast, "arbre.json");
+            //syntaxer.writeJSONToFile(ast, "src/arbre.json");
 
-            System.out.println("ast done");
+            //System.out.println("json file written");
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
