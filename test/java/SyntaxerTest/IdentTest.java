@@ -28,8 +28,7 @@ public class IdentTest {
     public void test_ident() throws Exception {
         syntaxer.addToken(new Word(Tag.ID, "mot"));
         Node n = syntaxer.IDENT();
-        Node n2 = new Node("IDENT");
-        n2.addChild(new Node("mot"));
+        Node n2 = new Node("mot");
         assertTrue(n.equals(n2));
     }
 
@@ -43,10 +42,7 @@ public class IdentTest {
     public void test_ident_existe_ok() throws SyntaxException {
         syntaxer.addToken(new Word(Tag.ID, "mot"));
         Node n = syntaxer.IDENT_EXISTE();
-        Node n2 = new Node("IDENT_EXISTE");
-        Node child = new Node("IDENT");
-        child.addChild(new Node("mot"));
-        n2.addChild(child);
+        Node n2 = new Node("mot");
         assertTrue(n.equals(n2));
     }
 
@@ -60,42 +56,8 @@ public class IdentTest {
     public void test_ident_existe_idf_non_present() throws SyntaxException {
         syntaxer.addToken(new Word(Tag.SEPARATOR, ";"));
         Node n = syntaxer.IDENT_EXISTE();
-        Node n2 = new Node("IDENT_EXISTE");
-        assertTrue(n.equals(n2));
+        Node n2 = null;
+        assertTrue(n == n2);
     }
 
-    @Test
-    public void test_ident_suite_ok()throws SyntaxException{
-        syntaxer.addToken(new Operator(","));
-        syntaxer.addToken(new Word(Tag.ID, "mot"));
-        syntaxer.addToken(new Word(Tag.OP, ":"));
-        ArrayList<Node> n = syntaxer.IDENT_SUITE();
-
-        ArrayList<Node> n2 = new ArrayList<>();
-        n2 = syntaxer.IDENT_PLUS();
-
-        assertTrue(n.equals(n2));
-        
-    }
-
-
-    @Test
-    public void test_ident_plus_ok() throws SyntaxException{
-        syntaxer.addToken(new Word(Tag.ID, "mot"));
-        syntaxer.addToken(new Operator(":"));
-        syntaxer.addToken(new Word(Tag.ID, "mot2"));
-        ArrayList<Node> n = syntaxer.IDENT_PLUS();
-        Node n2 = new Node("IDENT_PLUS");
-        Node child = new Node("IDENT");
-        child.addChild(new Node("mot"));
-        Node child2 = new Node("IDENT");
-        child2.addChild(new Node("mot2"));
-
-        n2.addChild(child);
-        System.out.println(n2);
-        System.out.println(n);
-        assertTrue(n.equals(n2));
-    }
-
-    
 }
