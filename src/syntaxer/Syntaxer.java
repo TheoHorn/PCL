@@ -268,7 +268,8 @@ public class Syntaxer {
                     current_token = tokens.poll();
                     current_tag = current_token.getTag();
                     if(current_tag == Tag.BEGIN){
-                        Node inst = INSTR_PLUS();
+                        Node inst = new Node("INSTR");
+                        inst.addChild(INSTR_PLUS());
                         current_token = tokens.poll();
                         current_tag = current_token.getTag();
                         if(current_tag == Tag.END){
@@ -318,7 +319,8 @@ public class Syntaxer {
                 current_token = tokens.poll();
                 current_tag = current_token.getTag();
                 if(current_tag == Tag.BEGIN){
-                    Node instr = INSTR_PLUS();
+                    Node instr = new Node("INSTR");
+                    instr.addChild(INSTR_PLUS());
                     current_token = tokens.poll();
                     current_tag = current_token.getTag();
                     if(current_tag == Tag.END){
@@ -690,22 +692,22 @@ public class Syntaxer {
     
     
 
-    public Node INSTR_PLUS() throws SyntaxException {
-        Node instrPlus = new Node("INSTR");
+    public ArrayList<Node> INSTR_PLUS() throws SyntaxException {
+        ArrayList<Node> instrPlus = new ArrayList<>();
         Token currentToken = tokens.peek();
         Tag currentTag = currentToken.getTag();
         if (currentTag == Tag.BEGIN || currentTag == Tag.IF || currentTag == Tag.FOR || currentTag ==Tag.WHILE || currentTag ==Tag.ID){
-            instrPlus.addChild(INSTR());
+            instrPlus.add(INSTR());
             currentToken = tokens.poll(); // Consommer ';'
             currentTag = currentToken.getTag();
             if (currentTag == Tag.SEPARATOR && ((Word) currentToken).getValue().equals(";")){
-                instrPlus.addChild(INSTR_SUITE());
+                instrPlus.addAll(INSTR_SUITE());
             }else{
                 throw new SyntaxException("Expected ';', found: " + currentToken.toString());
             }
         }else if (currentTag == Tag.RETURN){
             tokens.poll(); // Consommer 'return'
-            instrPlus.addChild(RETURN());
+            instrPlus.add(RETURN());
         }else{
             throw new SyntaxException("Expected an instruction, found: " + currentToken.toString());
         }
@@ -718,7 +720,7 @@ public class Syntaxer {
         Token currentToken = tokens.peek();
         Tag currentTag = currentToken.getTag();
         if (currentTag == Tag.BEGIN || currentTag == Tag.IF || currentTag == Tag.FOR || currentTag ==Tag.WHILE || currentTag ==Tag.ID || currentTag == Tag.RETURN){
-            instrSuite.add(INSTR_PLUS());
+            instrSuite.addAll(INSTR_PLUS());
         }else if (!(currentTag == Tag.END || currentTag == Tag.ELSIF || currentTag == Tag.ELSE)){
             //si le prochain token n'est pas dans le cas epsilon
             throw new SyntaxException("Expected an instruction, found: " + currentToken.toString());
