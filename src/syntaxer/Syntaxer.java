@@ -717,16 +717,8 @@ public class Syntaxer {
         ArrayList<Node> instrSuite = new ArrayList<>();
         Token currentToken = tokens.peek();
         Tag currentTag = currentToken.getTag();
-        if (currentTag == Tag.BEGIN || currentTag == Tag.IF || currentTag == Tag.FOR || currentTag ==Tag.WHILE || currentTag ==Tag.ID){
-            instrSuite.add(INSTR());
-            currentToken = tokens.poll(); // Consommer ';'
-            currentTag = currentToken.getTag();
-            if (!(currentTag == Tag.SEPARATOR && ((Word) currentToken).getValue().equals(";"))){
-                throw new SyntaxException("Expected ';', found: " + currentToken.toString());
-            }
-        }else if (currentTag == Tag.RETURN){
-            tokens.poll(); // Consommer 'return'
-            instrSuite.add(RETURN());
+        if (currentTag == Tag.BEGIN || currentTag == Tag.IF || currentTag == Tag.FOR || currentTag ==Tag.WHILE || currentTag ==Tag.ID || currentTag == Tag.RETURN){
+            instrSuite.add(INSTR_PLUS());
         }else if (!(currentTag == Tag.END || currentTag == Tag.ELSIF || currentTag == Tag.ELSE)){
             //si le prochain token n'est pas dans le cas epsilon
             throw new SyntaxException("Expected an instruction, found: " + currentToken.toString());

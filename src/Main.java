@@ -6,7 +6,7 @@ import java.io.File;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        File inputFile = new File("src/test.txt");
+        File inputFile = new File("src/test2.txt");
 
         Lexer lexer = new Lexer(inputFile);
         try {
