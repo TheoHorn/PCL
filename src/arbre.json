@@ -8,7 +8,7 @@
       "children": [
         {
           "id": 3,
-          "name": "unDebut",
+          "name": "demo",
           "children": []
         },
         {
@@ -21,7 +21,7 @@
               "children": [
                 {
                   "id": 6,
-                  "name": "aireRectangle",
+                  "name": "complique",
                   "children": []
                 },
                 {
@@ -30,7 +30,7 @@
                   "children": [
                     {
                       "id": 8,
-                      "name": "larg",
+                      "name": "param1",
                       "children": []
                     },
                     {
@@ -46,7 +46,7 @@
                   "children": [
                     {
                       "id": 11,
-                      "name": "long",
+                      "name": "param2",
                       "children": []
                     },
                     {
@@ -67,7 +67,7 @@
                   "children": [
                     {
                       "id": 15,
-                      "name": "aire",
+                      "name": "p",
                       "children": []
                     },
                     {
@@ -78,154 +78,176 @@
                   ]
                 },
                 {
-                  "id": 18,
-                  "name": ":\u003d",
+                  "id": 17,
+                  "name": "DECL",
                   "children": [
                     {
-                      "id": 17,
-                      "name": "aire",
+                      "id": 18,
+                      "name": "bool",
                       "children": []
                     },
                     {
-                      "id": 20,
-                      "name": "*",
+                      "id": 19,
+                      "name": "boolean",
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "id": 20,
+                  "name": "DECL",
+                  "children": [
+                    {
+                      "id": 21,
+                      "name": "res",
+                      "children": []
+                    },
+                    {
+                      "id": 22,
+                      "name": "integer",
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "id": 24,
+                  "name": ":\u003d",
+                  "children": [
+                    {
+                      "id": 23,
+                      "name": "res",
+                      "children": []
+                    },
+                    {
+                      "id": 25,
+                      "name": "0",
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "id": 27,
+                  "name": ":\u003d",
+                  "children": [
+                    {
+                      "id": 26,
+                      "name": "p",
+                      "children": []
+                    },
+                    {
+                      "id": 31,
+                      "name": "+",
                       "children": [
                         {
-                          "id": 19,
-                          "name": "larg",
-                          "children": []
+                          "id": 29,
+                          "name": "*",
+                          "children": [
+                            {
+                              "id": 28,
+                              "name": "param1",
+                              "children": []
+                            },
+                            {
+                              "id": 30,
+                              "name": "565",
+                              "children": []
+                            }
+                          ]
                         },
                         {
-                          "id": 21,
-                          "name": "long",
-                          "children": []
+                          "id": 33,
+                          "name": "*",
+                          "children": [
+                            {
+                              "id": 32,
+                              "name": "param2",
+                              "children": []
+                            },
+                            {
+                              "id": 35,
+                              "name": "/",
+                              "children": [
+                                {
+                                  "id": 34,
+                                  "name": "2",
+                                  "children": []
+                                },
+                                {
+                                  "id": 36,
+                                  "name": "param1",
+                                  "children": []
+                                }
+                              ]
+                            }
+                          ]
                         }
                       ]
                     }
                   ]
                 },
                 {
-                  "id": 22,
-                  "name": "RETURN",
-                  "children": [
-                    {
-                      "id": 23,
-                      "name": "aire",
-                      "children": []
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "id": 25,
-          "name": "DECL",
-          "children": [
-            {
-              "id": 26,
-              "name": "FUNC",
-              "children": [
-                {
-                  "id": 27,
-                  "name": "perimetreRectangle",
-                  "children": []
-                },
-                {
-                  "id": 28,
-                  "name": "PARAM",
-                  "children": [
-                    {
-                      "id": 29,
-                      "name": "larg",
-                      "children": []
-                    },
-                    {
-                      "id": 30,
-                      "name": "integer",
-                      "children": []
-                    }
-                  ]
-                },
-                {
-                  "id": 31,
-                  "name": "PARAM",
-                  "children": [
-                    {
-                      "id": 32,
-                      "name": "long",
-                      "children": []
-                    },
-                    {
-                      "id": 33,
-                      "name": "integer",
-                      "children": []
-                    }
-                  ]
-                },
-                {
-                  "id": 34,
-                  "name": "integer",
-                  "children": []
-                },
-                {
-                  "id": 35,
-                  "name": "DECL",
-                  "children": [
-                    {
-                      "id": 36,
-                      "name": "p",
-                      "children": []
-                    },
-                    {
-                      "id": 37,
-                      "name": "integer",
-                      "children": []
-                    }
-                  ]
-                },
-                {
-                  "id": 39,
+                  "id": 38,
                   "name": ":\u003d",
                   "children": [
                     {
-                      "id": 38,
-                      "name": "p",
+                      "id": 37,
+                      "name": "bool",
                       "children": []
                     },
                     {
-                      "id": 43,
-                      "name": "+",
+                      "id": 44,
+                      "name": "\u003c\u003d",
                       "children": [
                         {
-                          "id": 41,
-                          "name": "*",
+                          "id": 40,
+                          "name": "+",
                           "children": [
                             {
-                              "id": 40,
-                              "name": "larg",
+                              "id": 39,
+                              "name": "p",
                               "children": []
                             },
                             {
                               "id": 42,
-                              "name": "2",
-                              "children": []
+                              "name": "*",
+                              "children": [
+                                {
+                                  "id": 41,
+                                  "name": "5",
+                                  "children": []
+                                },
+                                {
+                                  "id": 43,
+                                  "name": "4",
+                                  "children": []
+                                }
+                              ]
                             }
                           ]
                         },
                         {
-                          "id": 45,
-                          "name": "*",
+                          "id": 48,
+                          "name": "-",
                           "children": [
                             {
-                              "id": 44,
-                              "name": "long",
-                              "children": []
+                              "id": 46,
+                              "name": "/",
+                              "children": [
+                                {
+                                  "id": 45,
+                                  "name": "p",
+                                  "children": []
+                                },
+                                {
+                                  "id": 47,
+                                  "name": "2",
+                                  "children": []
+                                }
+                              ]
                             },
                             {
-                              "id": 46,
-                              "name": "2",
+                              "id": 49,
+                              "name": "6",
                               "children": []
                             }
                           ]
@@ -235,12 +257,192 @@
                   ]
                 },
                 {
-                  "id": 47,
+                  "id": 50,
+                  "name": "IF",
+                  "children": [
+                    {
+                      "id": 52,
+                      "name": "\u003d",
+                      "children": [
+                        {
+                          "id": 51,
+                          "name": "bool",
+                          "children": []
+                        },
+                        {
+                          "id": 53,
+                          "name": "true",
+                          "children": []
+                        }
+                      ]
+                    },
+                    {
+                      "id": 55,
+                      "name": ":\u003d",
+                      "children": [
+                        {
+                          "id": 54,
+                          "name": "p",
+                          "children": []
+                        },
+                        {
+                          "id": 57,
+                          "name": "*",
+                          "children": [
+                            {
+                              "id": 56,
+                              "name": "p",
+                              "children": []
+                            },
+                            {
+                              "id": 59,
+                              "name": "+",
+                              "children": [
+                                {
+                                  "id": 58,
+                                  "name": "p",
+                                  "children": []
+                                },
+                                {
+                                  "id": 60,
+                                  "name": "5",
+                                  "children": []
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "id": 61,
+                      "name": "ELSE",
+                      "children": [
+                        {
+                          "id": 63,
+                          "name": ":\u003d",
+                          "children": [
+                            {
+                              "id": 62,
+                              "name": "p",
+                              "children": []
+                            },
+                            {
+                              "id": 65,
+                              "name": "/",
+                              "children": [
+                                {
+                                  "id": 64,
+                                  "name": "p",
+                                  "children": []
+                                },
+                                {
+                                  "id": 67,
+                                  "name": "-",
+                                  "children": [
+                                    {
+                                      "id": 66,
+                                      "name": "p",
+                                      "children": []
+                                    },
+                                    {
+                                      "id": 68,
+                                      "name": "5",
+                                      "children": []
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": 69,
+                  "name": "WHILE",
+                  "children": [
+                    {
+                      "id": 71,
+                      "name": "\u003e",
+                      "children": [
+                        {
+                          "id": 70,
+                          "name": "p",
+                          "children": []
+                        },
+                        {
+                          "id": 72,
+                          "name": "0",
+                          "children": []
+                        }
+                      ]
+                    },
+                    {
+                      "id": 74,
+                      "name": ":\u003d",
+                      "children": [
+                        {
+                          "id": 73,
+                          "name": "p",
+                          "children": []
+                        },
+                        {
+                          "id": 76,
+                          "name": "-",
+                          "children": [
+                            {
+                              "id": 75,
+                              "name": "p",
+                              "children": []
+                            },
+                            {
+                              "id": 77,
+                              "name": "10",
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "id": 79,
+                      "name": ":\u003d",
+                      "children": [
+                        {
+                          "id": 78,
+                          "name": "res",
+                          "children": []
+                        },
+                        {
+                          "id": 81,
+                          "name": "+",
+                          "children": [
+                            {
+                              "id": 80,
+                              "name": "res",
+                              "children": []
+                            },
+                            {
+                              "id": 82,
+                              "name": "1",
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": 83,
                   "name": "RETURN",
                   "children": [
                     {
-                      "id": 48,
-                      "name": "p",
+                      "id": 84,
+                      "name": "res",
                       "children": []
                     }
                   ]
@@ -250,134 +452,131 @@
           ]
         },
         {
-          "id": 50,
+          "id": 86,
           "name": "DECL",
           "children": [
             {
-              "id": 51,
-              "name": "choix",
+              "id": 87,
+              "name": "choix1",
               "children": []
             },
             {
-              "id": 52,
+              "id": 88,
               "name": "integer",
               "children": []
             }
           ]
         },
         {
-          "id": 54,
-          "name": ":\u003d",
+          "id": 89,
+          "name": "DECL",
           "children": [
             {
-              "id": 53,
-              "name": "choix",
+              "id": 90,
+              "name": "choix2",
               "children": []
             },
             {
-              "id": 55,
+              "id": 91,
+              "name": "integer",
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": 93,
+          "name": ":\u003d",
+          "children": [
+            {
+              "id": 92,
+              "name": "choix1",
+              "children": []
+            },
+            {
+              "id": 94,
               "name": "2",
               "children": []
             }
           ]
         },
         {
-          "id": 56,
-          "name": "IF",
+          "id": 96,
+          "name": ":\u003d",
           "children": [
             {
-              "id": 58,
-              "name": "\u003d",
+              "id": 95,
+              "name": "choix2",
+              "children": []
+            },
+            {
+              "id": 97,
+              "name": "3",
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": 98,
+          "name": "FOR",
+          "children": [
+            {
+              "id": 99,
+              "name": "choix1",
+              "children": []
+            },
+            {
+              "id": 100,
+              "name": "1",
+              "children": []
+            },
+            {
+              "id": 101,
+              "name": "10",
+              "children": []
+            },
+            {
+              "id": 102,
+              "name": "FOR",
               "children": [
                 {
-                  "id": 57,
-                  "name": "choix",
+                  "id": 103,
+                  "name": "choix2",
                   "children": []
                 },
                 {
-                  "id": 59,
+                  "id": 104,
                   "name": "1",
                   "children": []
-                }
-              ]
-            },
-            {
-              "id": 61,
-              "name": ":\u003d",
-              "children": [
+                },
                 {
-                  "id": 60,
-                  "name": "valeur",
+                  "id": 105,
+                  "name": "10",
                   "children": []
                 },
                 {
-                  "id": 62,
-                  "name": "perimetreRectangle",
-                  "children": [
-                    {
-                      "id": 63,
-                      "name": "2",
-                      "children": []
-                    },
-                    {
-                      "id": 64,
-                      "name": "3",
-                      "children": []
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "id": 67,
-              "name": "valeur",
-              "children": [
-                {
-                  "id": 65,
-                  "name": "put",
-                  "children": []
-                }
-              ]
-            },
-            {
-              "id": 68,
-              "name": "ELSE",
-              "children": [
-                {
-                  "id": 70,
+                  "id": 107,
                   "name": ":\u003d",
                   "children": [
                     {
-                      "id": 69,
-                      "name": "valeur",
+                      "id": 106,
+                      "name": "expr",
                       "children": []
                     },
                     {
-                      "id": 71,
-                      "name": "aireRectangale",
+                      "id": 108,
+                      "name": "complique",
                       "children": [
                         {
-                          "id": 72,
-                          "name": "2",
+                          "id": 109,
+                          "name": "choix1",
                           "children": []
                         },
                         {
-                          "id": 73,
-                          "name": "3",
+                          "id": 110,
+                          "name": "choix2",
                           "children": []
                         }
                       ]
-                    }
-                  ]
-                },
-                {
-                  "id": 76,
-                  "name": "valeur",
-                  "children": [
-                    {
-                      "id": 74,
-                      "name": "put",
-                      "children": []
                     }
                   ]
                 }

@@ -11,7 +11,7 @@ import java.nio.file.StandardCopyOption;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        File inputFile = new File("src/test.txt");
+        File inputFile = new File("src/demo.txt");
 
         Lexer lexer = new Lexer(inputFile);
         try {

@@ -833,8 +833,8 @@ public class Syntaxer {
         return returnNode;
     }
 
-    public Node LOOP() throws SyntaxException {
-        Node loop = new Node("LOOP");
+    public ArrayList<Node> LOOP() throws SyntaxException {
+        ArrayList<Node> loop = new ArrayList<>();
         Token currentToken = tokens.peek();
         Tag currentTag = currentToken.getTag();
         if (currentTag == Tag.TRUE || currentTag == Tag.FALSE || currentTag == Tag.NULL || currentTag == Tag.NEW || currentTag == Tag.CHARACTERVAL || currentTag == Tag.NOT || currentTag == Tag.ID || currentTag == Tag.NUM || currentTag == Tag.CHAR || currentTag == Tag.OP){
@@ -844,13 +844,13 @@ public class Syntaxer {
                     throw new SyntaxException("Expected a correct expression, found: " + currentToken.toString());
                 }
             }
-            loop.addChild(EXPR());
+            loop.add(EXPR());
             currentToken = tokens.poll(); // Consommer 'loop'
             currentTag = currentToken.getTag();
             if (!(currentTag == Tag.LOOP)){
                 throw new SyntaxException("Expected 'loop', found: " + currentToken.toString());
             }
-            loop.addChild(INSTR_PLUS());
+            loop.addAll(INSTR_PLUS());
             currentToken = tokens.poll(); // Consommer 'end'
             currentTag = currentToken.getTag();
             if (!(currentTag == Tag.END)){
