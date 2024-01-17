@@ -5,6 +5,9 @@ import syntaxer.Syntaxer;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 public class Main {
     public static void main(String[] args) throws Exception {
@@ -30,18 +33,10 @@ public class Main {
 
             ProcessBuilder processBuilder = new ProcessBuilder(pythonCommand, pythonScript);
 
-            Process process = processBuilder.start();
+            processBuilder.start();
 
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream()))) {
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    System.err.println(line);
-                }
-            }
-
-            int exitCode = process.waitFor();
+            Files.copy(Paths.get("src/arbre.png"), Paths.get("arbre.png"), StandardCopyOption.REPLACE_EXISTING);
             
-            System.out.println("Code de sortie : " + exitCode);
 
             System.out.println("json file written");
         } catch (Exception e) {

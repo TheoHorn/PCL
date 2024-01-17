@@ -6,6 +6,8 @@ import json
 
 file = "src/arbre.json"
 G = nx.DiGraph()
+plt.figure(figsize=(20,20))
+
 
 def hierarchy_pos(G, root=None, width=1., vert_gap = 0.2, vert_loc = 0, xcenter = 0.5):
 
@@ -69,7 +71,7 @@ def hierarchy_pos(G, root=None, width=1., vert_gap = 0.2, vert_loc = 0, xcenter 
                                     pos=pos, parent = root)
         return pos
 
-
+            
     return _hierarchy_pos(G, root, width, vert_gap, vert_loc, xcenter)
 
 with open(file, 'r') as json_file:
@@ -95,5 +97,8 @@ node_labels = {node_id: f"{G.nodes[node_id]['name']}" for node_id in G.nodes}
 pos_hierarchy = hierarchy_pos(G, root=G.nodes.get(0), width=1., vert_gap=0.2, vert_loc=0, xcenter=0.5)
 
 nx.draw(G, pos=pos_hierarchy, with_labels=True, labels=node_labels, font_weight='bold', arrowsize=20, node_size=700, node_color='skyblue', font_size=8)
+
+plt.savefig("src/arbre.png")
+
 plt.show()
 
