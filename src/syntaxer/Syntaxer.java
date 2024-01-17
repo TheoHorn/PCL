@@ -58,11 +58,13 @@ public class Syntaxer {
         }
 
         //second token : Ada
-        if (current_tag == Tag.ID && ((Word) current_token).getValue().equals("Ada")){
+        if (current_tag == Tag.ID && ((Word) current_token).getValue().equals("Ada")) {
+            Node adaNode = new Node("Ada");
+            this.arbre.addChild(adaNode);
             current_token = this.tokens.poll();
             current_tag = current_token.getTag();
-        }else{
-            throw new  SyntaxException(current_token.toString());
+        } else {
+            throw new SyntaxException(current_token.toString());
         }
 
         //third token : .
@@ -91,6 +93,8 @@ public class Syntaxer {
 
         //sixth token : use
          if(current_tag!=Tag.ID && ((Word) current_token).getValue().equals("use")){
+            Node useNode = new Node("use");
+            this.arbre.addChild(useNode);
             current_token = this.tokens.poll();
             current_tag = current_token.getTag();
         }else{
@@ -98,15 +102,19 @@ public class Syntaxer {
         }
 
         //seventh token : Ada
-        if (current_tag == Tag.ID && ((Word) current_token).getValue().equals("Ada")){
+        if (current_tag == Tag.ID && ((Word) current_token).getValue().equals("Ada")) {
+            Node adaNode = new Node("Ada");
+            this.arbre.addChild(adaNode);
             current_token = this.tokens.poll();
             current_tag = current_token.getTag();
-        }else{
-            throw new  SyntaxException(current_token.toString());
+        } else {
+            throw new SyntaxException(current_token.toString());
         }
 
         //eighth token : .
         if(current_tag==Tag.OP && ((Operator) current_token).getValue().equals("acs")){
+            Node acsNode = new Node(".");
+            this.arbre.addChild(acsNode);
             current_token = this.tokens.poll();
             current_tag = current_token.getTag();
         }else{

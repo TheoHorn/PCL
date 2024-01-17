@@ -2,7 +2,9 @@ import lexer.Lexer;
 import syntaxer.Node;
 import syntaxer.Syntaxer;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStreamReader;
 
 public class Main {
     public static void main(String[] args) throws Exception {
@@ -18,9 +20,27 @@ public class Main {
         Syntaxer syntaxer = new Syntaxer(lexer.getTokens());
         try {
 
-            Node ast = syntaxer.launch();
+            Node parseTree = syntaxer.launch();
 
-            ast.writeJSONToFile("src/arbre.json");
+            parseTree.writeJSONToFile("src/arbre.json");
+
+            String pythonCommand = "python3";  
+            String pythonScript = "src/arbre.py";  
+
+            ProcessBuilder processBuilder = new ProcessBuilder(pythonCommand, pythonScript);
+
+            Process process = processBuilder.start();
+
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream()))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    System.err.println(line);
+                }
+            }
+
+            int exitCode = process.waitFor();
+            
+            System.out.println("Code de sortie : " + exitCode);
 
             System.out.println("json file written");
         } catch (Exception e) {
