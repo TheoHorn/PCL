@@ -69,7 +69,7 @@ def hierarchy_pos(G, root=None, width=1., vert_gap = 0.2, vert_loc = 0, xcenter 
                                     pos=pos, parent = root)
         return pos
 
-            
+
     return _hierarchy_pos(G, root, width, vert_gap, vert_loc, xcenter)
 
 with open(file, 'r') as json_file:
@@ -88,17 +88,12 @@ def process_node(node_data, parent_id=None):
 
 process_node(data)
 
-# Affichage du graphe
+
 pos = nx.spring_layout(G)
 node_labels = {node_id: f"{G.nodes[node_id]['name']}" for node_id in G.nodes}
-# nx.draw(G, pos, with_labels=True, labels=node_labels)
-# plt.show()
 
 pos_hierarchy = hierarchy_pos(G, root=G.nodes.get(0), width=1., vert_gap=0.2, vert_loc=0, xcenter=0.5)
 
-# Dessiner le graphe
 nx.draw(G, pos=pos_hierarchy, with_labels=True, labels=node_labels, font_weight='bold', arrowsize=20, node_size=700, node_color='skyblue', font_size=8)
-    
-#nx.draw(G, with_labels=True, font_weight='bold', arrowsize=20, node_size=700, node_color='skyblue', font_size=8)
 plt.show()
 

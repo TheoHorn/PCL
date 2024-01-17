@@ -59,8 +59,6 @@ public class Syntaxer {
 
         //second token : Ada
         if (current_tag == Tag.ID && ((Word) current_token).getValue().equals("Ada")) {
-            Node adaNode = new Node("Ada");
-            this.arbre.addChild(adaNode);
             current_token = this.tokens.poll();
             current_tag = current_token.getTag();
         } else {
@@ -93,8 +91,6 @@ public class Syntaxer {
 
         //sixth token : use
          if(current_tag!=Tag.ID && ((Word) current_token).getValue().equals("use")){
-            Node useNode = new Node("use");
-            this.arbre.addChild(useNode);
             current_token = this.tokens.poll();
             current_tag = current_token.getTag();
         }else{
@@ -103,8 +99,6 @@ public class Syntaxer {
 
         //seventh token : Ada
         if (current_tag == Tag.ID && ((Word) current_token).getValue().equals("Ada")) {
-            Node adaNode = new Node("Ada");
-            this.arbre.addChild(adaNode);
             current_token = this.tokens.poll();
             current_tag = current_token.getTag();
         } else {
@@ -113,8 +107,6 @@ public class Syntaxer {
 
         //eighth token : .
         if(current_tag==Tag.OP && ((Operator) current_token).getValue().equals("acs")){
-            Node acsNode = new Node(".");
-            this.arbre.addChild(acsNode);
             current_token = this.tokens.poll();
             current_tag = current_token.getTag();
         }else{
@@ -146,7 +138,7 @@ public class Syntaxer {
         Node proc = PROC();
         // on ajoute le noeud de la procedure a l'arbre
         this.arbre.addChild(proc);
-        return proc;
+        return this.arbre;
     }
     
     public Node DECL() throws Exception {
@@ -154,7 +146,6 @@ public class Syntaxer {
         // on recupere le premier token sans le supprimer car on veut le garder pour le prochain appel de fonction (ici IDENT_PLUS)
         Token current_token = tokens.peek();
         Tag current_tag = current_token.getTag();
-
         // on regarde les premiers et les règles associées dans notre table puis on les applique
 
         //first rule : type IDENT DEF_IDENT
@@ -276,8 +267,7 @@ public class Syntaxer {
                     current_token = tokens.poll();
                     current_tag = current_token.getTag();
                     if(current_tag == Tag.BEGIN){
-                        Node inst = new Node("INSTR");
-                        inst.addChild(INSTR_PLUS());
+                        ArrayList<Node> inst = INSTR_PLUS();
                         current_token = tokens.poll();
                         current_tag = current_token.getTag();
                         if(current_tag == Tag.END){
@@ -327,8 +317,7 @@ public class Syntaxer {
                 current_token = tokens.poll();
                 current_tag = current_token.getTag();
                 if(current_tag == Tag.BEGIN){
-                    Node instr = new Node("INSTR");
-                    instr.addChild(INSTR_PLUS());
+                    ArrayList<Node> instr = INSTR_PLUS();
                     current_token = tokens.poll();
                     current_tag = current_token.getTag();
                     if(current_tag == Tag.END){
@@ -849,28 +838,31 @@ public class Syntaxer {
         Token currentToken = tokens.peek();
         Tag currentTag = currentToken.getTag();
         if (currentTag == Tag.TRUE || currentTag == Tag.FALSE || currentTag == Tag.NULL || currentTag == Tag.NEW || currentTag == Tag.CHARACTERVAL || currentTag == Tag.NOT || currentTag == Tag.ID || currentTag == Tag.NUM || currentTag == Tag.CHAR || currentTag == Tag.OP){
-            String opValue = ((Operator) currentToken).getValue();
-            if(opValue.equals("lpa") || opValue.equals("-u")){
-                loop.addChild(EXPR());
-                currentToken = tokens.poll(); // Consommer 'loop'
-                currentTag = currentToken.getTag();
-                if (!(currentTag == Tag.LOOP)){
-                    throw new SyntaxException("Expected 'loop', found: " + currentToken.toString());
+            if (currentTag == Tag.OP){
+                String opValue = ((Operator) currentToken).getValue();
+                if(!(opValue.equals("lpa") || opValue.equals("-u"))) {
+                    throw new SyntaxException("Expected a correct expression, found: " + currentToken.toString());
                 }
-                loop.addChild(INSTR_PLUS());
-                currentToken = tokens.poll(); // Consommer 'end'
-                currentTag = currentToken.getTag();
-                if (!(currentTag == Tag.END)){
-                    throw new SyntaxException("Expected 'end', found: " + currentToken.toString());
-                }
-                currentToken = tokens.poll(); // Consommer 'loop'
-                currentTag = currentToken.getTag();
-                if (!(currentTag == Tag.LOOP)){
-                    throw new SyntaxException("Expected 'loop', found: " + currentToken.toString());
-                }
-            }else{
-                throw new SyntaxException("Expected an expression, found: " + currentToken.toString());
             }
+            loop.addChild(EXPR());
+            currentToken = tokens.poll(); // Consommer 'loop'
+            currentTag = currentToken.getTag();
+            if (!(currentTag == Tag.LOOP)){
+                throw new SyntaxException("Expected 'loop', found: " + currentToken.toString());
+            }
+            loop.addChild(INSTR_PLUS());
+            currentToken = tokens.poll(); // Consommer 'end'
+            currentTag = currentToken.getTag();
+            if (!(currentTag == Tag.END)){
+                throw new SyntaxException("Expected 'end', found: " + currentToken.toString());
+            }
+            currentToken = tokens.poll(); // Consommer 'loop'
+            currentTag = currentToken.getTag();
+            if (!(currentTag == Tag.LOOP)){
+                throw new SyntaxException("Expected 'loop', found: " + currentToken.toString());
+            }
+        }else{
+            throw new SyntaxException("Expected an expression, found: " + currentToken.toString());
         }
         return loop;
     }

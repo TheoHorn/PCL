@@ -8,11 +8,12 @@ import java.io.InputStreamReader;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        File inputFile = new File("src/test2.txt");
+        File inputFile = new File("src/test.txt");
 
         Lexer lexer = new Lexer(inputFile);
         try {
             lexer.tokenizer();
+            System.out.println(lexer.print());
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return;

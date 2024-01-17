@@ -1,0 +1,36 @@
+with Ada.Text_IO ; use Ada.Text_IO ;
+procedure demo is
+
+    function complique(param1 : integer; param2 : integer) return integer is
+    p : integer ;
+    bool : boolean ;
+    res : integer ;
+    begin
+        res := 0;
+        p := param1 * 565 + param2*2 / param1 ;
+        bool := p + 5 * 4 <= p/2 -6;
+        if bool = true
+            then p := p * (p + 5);
+        else p := p / (p - 5);
+        end if;
+        while p > 0 loop
+            p := p - 10;
+            res := res + 1;
+        end loop;
+    return res
+    end complique;
+
+    -- VARIABLES
+choix1 : integer ;
+choix2 : integer ;
+
+    -- PROCEDURE PRINCIPALE
+begin
+    choix1 := 2;
+    choix2 := 3;
+    for choix1 in 1..10 loop
+        for choix2 in 1..10 loop
+            expr := complique(choix1 , choix2);
+        end loop;
+    end loop;
+end unDebut ;
