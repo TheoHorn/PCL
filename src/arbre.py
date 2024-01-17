@@ -45,19 +45,25 @@ def hierarchy_pos(G, root=None, width=1., vert_gap = 0.2, vert_loc = 0, xcenter 
 
 with open(file, 'r') as json_file:
     data = json.load(json_file)
-    root = data["name"]
-    G.add_node(root)
 
-    def process_node(node_data, parent_name=None):
-        node_name = node_data["name"]
-        G.add_node(node_name)
-        if parent_name is not None:
-            G.add_edge(parent_name, node_name)
-        for child in node_data.get("children", []):
-            process_node(child, node_name)
+G = nx.DiGraph()
 
-    process_node(data)
+def process_node(node_data, parent_id=None):
+    node_id = node_data["id"]
+    node_name = node_data["name"]
+    G.add_node(node_id, id=node_id, name=node_name)  # Ajout des attributs ID et name au nœud
+    if parent_id is not None:
+        G.add_edge(parent_id, node_id)
+    for child in node_data.get("children", []):
+        process_node(child, node_id)
 
+process_node(data)
+
+# Affichage du graphe
+pos = nx.spring_layout(G)
+node_labels = {node_id: f"{G.nodes[node_id]['name']}" for node_id in G.nodes}
+nx.draw(G, pos, with_labels=True, labels=node_labels)
+plt.show()
 
 #pos_hierarchy = hierarchy_pos(G, root=root, width=1., vert_gap=0.2, vert_loc=0, xcenter=0.5)
 
