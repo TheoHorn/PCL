@@ -37,7 +37,7 @@ public class ProcTest {
         syntaxer.addToken(new Word(Tag.SEPARATOR, ";"));
         Node node = syntaxer.PROC();
         Node node2 = new Node("test");
-        assertEquals(node2, node.getChildren().getFirst());
+        assertEquals(node2, node.getChildren().get(0));
     }
 
     @Test
