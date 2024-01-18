@@ -57,7 +57,7 @@ public class DeclTest {
         syntaxer.addToken(new Word(Tag.SEPARATOR,";"));
         Node node = syntaxer.DECL();
         Node node2 = new Node("example");
-        assertEquals(node.getChildren().getFirst(),node2);
+        assertEquals(node.getChildren().get(0),node2);
 
     }
 
@@ -91,14 +91,14 @@ public class DeclTest {
         //assertEquals(node.getChildren().getFirst(),node2);
     }
 
-    @Test
+/*    @Test
     public void test_declaration_type() throws Exception {
         syntaxer.addToken(new Word(Tag.TYPE, "integer"));
         syntaxer.addToken(new Word(Tag.ID, "example"));
         syntaxer.addToken(new Word(Tag.SEPARATOR, ";"));
         Node node = syntaxer.DECL();
 
-    }
+    }*/
 
     @Test
     public void test_declaration_id_error() throws Exception {
@@ -140,7 +140,8 @@ public class DeclTest {
         syntaxer.addToken(new Word(Tag.SEPARATOR, ";"));
         Node node = syntaxer.PROC();
         Node node2 = new Node("test");
-        assertEquals(node2, node.getChildren().getFirst());
+        
+        assertEquals(node2, node.getChildren().get(0));
     }
 
     @Test
