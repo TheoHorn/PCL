@@ -1,1 +1,590 @@
-{"name":"PROC","children":[{"name":"unDebut","children":[]},{"name":"DECL","children":[{"name":"FUNC","children":[{"name":"perimetreRectangle","children":[]},{"name":"PARAM","children":[{"name":"larg","children":[]},{"name":"integer","children":[]}]},{"name":"PARAM","children":[{"name":"long","children":[]},{"name":"integer","children":[]}]},{"name":"integer","children":[]},{"name":"DECL","children":[{"name":"p","children":[]},{"name":"integer","children":[]}]},{"name":"INSTR","children":[{"name":":\u003d","children":[{"name":"p","children":[]},{"name":"+","children":[{"name":"*","children":[{"name":"larg","children":[]},{"name":"2","children":[]}]},{"name":"*","children":[{"name":"long","children":[]},{"name":"2","children":[]}]}]}]},{"name":"INSTR","children":[{"name":":\u003d","children":[{"name":"bool","children":[]},{"name":"\u003c\u003d","children":[{"name":"+","children":[{"name":"p","children":[]},{"name":"*","children":[{"name":"5","children":[]},{"name":"4","children":[]}]}]},{"name":"-","children":[{"name":"/","children":[{"name":"p","children":[]},{"name":"2","children":[]}]},{"name":"6","children":[]}]}]}]},{"name":"INSTR","children":[{"name":"IF","children":[{"name":"\u003d","children":[{"name":"bool","children":[]},{"name":"true","children":[]}]},{"name":"INSTR","children":[{"name":":\u003d","children":[{"name":"p","children":[]},{"name":"*","children":[{"name":"p","children":[]},{"name":"+","children":[{"name":"p","children":[]},{"name":"5","children":[]}]}]}]}]}]},{"name":"INSTR","children":[{"name":"RETURN","children":[{"name":"p","children":[]}]}]}]}]}]}]}]},{"name":"DECL","children":[{"name":"choix","children":[]},{"name":"integer","children":[]}]},{"name":"INSTR","children":[{"name":":\u003d","children":[{"name":"choix","children":[]},{"name":"2","children":[]}]},{"name":"INSTR","children":[{"name":"IF","children":[{"name":"\u003d","children":[{"name":"choix","children":[]},{"name":"1","children":[]}]},{"name":"INSTR","children":[{"name":":\u003d","children":[{"name":"valeur","children":[]},{"name":"perimetreRectangle","children":[{"name":"2","children":[]},{"name":"3","children":[]}]}]},{"name":"INSTR","children":[{"name":"valeur","children":[{"name":"put","children":[]}]}]}]},{"name":"ELSE","children":[{"name":"INSTR","children":[{"name":":\u003d","children":[{"name":"valeur","children":[]},{"name":"aireRectangale","children":[{"name":"2","children":[]},{"name":"3","children":[]}]}]},{"name":"INSTR","children":[{"name":"valeur","children":[{"name":"put","children":[]}]}]}]}]}]}]}]}]}
+{
+  "id": 1,
+  "name": "File",
+  "children": [
+    {
+      "id": 2,
+      "name": "PROC",
+      "children": [
+        {
+          "id": 3,
+          "name": "demo",
+          "children": []
+        },
+        {
+          "id": 4,
+          "name": "DECL",
+          "children": [
+            {
+              "id": 5,
+              "name": "FUNC",
+              "children": [
+                {
+                  "id": 6,
+                  "name": "complique",
+                  "children": []
+                },
+                {
+                  "id": 7,
+                  "name": "PARAM",
+                  "children": [
+                    {
+                      "id": 8,
+                      "name": "param1",
+                      "children": []
+                    },
+                    {
+                      "id": 9,
+                      "name": "integer",
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "id": 10,
+                  "name": "PARAM",
+                  "children": [
+                    {
+                      "id": 11,
+                      "name": "param2",
+                      "children": []
+                    },
+                    {
+                      "id": 12,
+                      "name": "integer",
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "id": 13,
+                  "name": "integer",
+                  "children": []
+                },
+                {
+                  "id": 14,
+                  "name": "DECL",
+                  "children": [
+                    {
+                      "id": 15,
+                      "name": "p",
+                      "children": []
+                    },
+                    {
+                      "id": 16,
+                      "name": "integer",
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "id": 17,
+                  "name": "DECL",
+                  "children": [
+                    {
+                      "id": 18,
+                      "name": "bool",
+                      "children": []
+                    },
+                    {
+                      "id": 19,
+                      "name": "boolean",
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "id": 20,
+                  "name": "DECL",
+                  "children": [
+                    {
+                      "id": 21,
+                      "name": "res",
+                      "children": []
+                    },
+                    {
+                      "id": 22,
+                      "name": "integer",
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "id": 24,
+                  "name": ":\u003d",
+                  "children": [
+                    {
+                      "id": 23,
+                      "name": "res",
+                      "children": []
+                    },
+                    {
+                      "id": 25,
+                      "name": "0",
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "id": 27,
+                  "name": ":\u003d",
+                  "children": [
+                    {
+                      "id": 26,
+                      "name": "p",
+                      "children": []
+                    },
+                    {
+                      "id": 31,
+                      "name": "+",
+                      "children": [
+                        {
+                          "id": 29,
+                          "name": "*",
+                          "children": [
+                            {
+                              "id": 28,
+                              "name": "param1",
+                              "children": []
+                            },
+                            {
+                              "id": 30,
+                              "name": "565",
+                              "children": []
+                            }
+                          ]
+                        },
+                        {
+                          "id": 33,
+                          "name": "*",
+                          "children": [
+                            {
+                              "id": 32,
+                              "name": "param2",
+                              "children": []
+                            },
+                            {
+                              "id": 35,
+                              "name": "/",
+                              "children": [
+                                {
+                                  "id": 34,
+                                  "name": "2",
+                                  "children": []
+                                },
+                                {
+                                  "id": 36,
+                                  "name": "param1",
+                                  "children": []
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": 38,
+                  "name": ":\u003d",
+                  "children": [
+                    {
+                      "id": 37,
+                      "name": "bool",
+                      "children": []
+                    },
+                    {
+                      "id": 44,
+                      "name": "\u003c\u003d",
+                      "children": [
+                        {
+                          "id": 40,
+                          "name": "+",
+                          "children": [
+                            {
+                              "id": 39,
+                              "name": "p",
+                              "children": []
+                            },
+                            {
+                              "id": 42,
+                              "name": "*",
+                              "children": [
+                                {
+                                  "id": 41,
+                                  "name": "5",
+                                  "children": []
+                                },
+                                {
+                                  "id": 43,
+                                  "name": "4",
+                                  "children": []
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "id": 48,
+                          "name": "-",
+                          "children": [
+                            {
+                              "id": 46,
+                              "name": "/",
+                              "children": [
+                                {
+                                  "id": 45,
+                                  "name": "p",
+                                  "children": []
+                                },
+                                {
+                                  "id": 47,
+                                  "name": "2",
+                                  "children": []
+                                }
+                              ]
+                            },
+                            {
+                              "id": 49,
+                              "name": "6",
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": 50,
+                  "name": "IF",
+                  "children": [
+                    {
+                      "id": 52,
+                      "name": "\u003d",
+                      "children": [
+                        {
+                          "id": 51,
+                          "name": "bool",
+                          "children": []
+                        },
+                        {
+                          "id": 53,
+                          "name": "true",
+                          "children": []
+                        }
+                      ]
+                    },
+                    {
+                      "id": 55,
+                      "name": ":\u003d",
+                      "children": [
+                        {
+                          "id": 54,
+                          "name": "p",
+                          "children": []
+                        },
+                        {
+                          "id": 57,
+                          "name": "*",
+                          "children": [
+                            {
+                              "id": 56,
+                              "name": "p",
+                              "children": []
+                            },
+                            {
+                              "id": 59,
+                              "name": "+",
+                              "children": [
+                                {
+                                  "id": 58,
+                                  "name": "p",
+                                  "children": []
+                                },
+                                {
+                                  "id": 60,
+                                  "name": "5",
+                                  "children": []
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "id": 61,
+                      "name": "ELSE",
+                      "children": [
+                        {
+                          "id": 63,
+                          "name": ":\u003d",
+                          "children": [
+                            {
+                              "id": 62,
+                              "name": "p",
+                              "children": []
+                            },
+                            {
+                              "id": 65,
+                              "name": "/",
+                              "children": [
+                                {
+                                  "id": 64,
+                                  "name": "p",
+                                  "children": []
+                                },
+                                {
+                                  "id": 67,
+                                  "name": "-",
+                                  "children": [
+                                    {
+                                      "id": 66,
+                                      "name": "p",
+                                      "children": []
+                                    },
+                                    {
+                                      "id": 68,
+                                      "name": "5",
+                                      "children": []
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": 69,
+                  "name": "WHILE",
+                  "children": [
+                    {
+                      "id": 71,
+                      "name": "\u003e",
+                      "children": [
+                        {
+                          "id": 70,
+                          "name": "p",
+                          "children": []
+                        },
+                        {
+                          "id": 72,
+                          "name": "0",
+                          "children": []
+                        }
+                      ]
+                    },
+                    {
+                      "id": 74,
+                      "name": ":\u003d",
+                      "children": [
+                        {
+                          "id": 73,
+                          "name": "p",
+                          "children": []
+                        },
+                        {
+                          "id": 76,
+                          "name": "-",
+                          "children": [
+                            {
+                              "id": 75,
+                              "name": "p",
+                              "children": []
+                            },
+                            {
+                              "id": 77,
+                              "name": "10",
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "id": 79,
+                      "name": ":\u003d",
+                      "children": [
+                        {
+                          "id": 78,
+                          "name": "res",
+                          "children": []
+                        },
+                        {
+                          "id": 81,
+                          "name": "+",
+                          "children": [
+                            {
+                              "id": 80,
+                              "name": "res",
+                              "children": []
+                            },
+                            {
+                              "id": 82,
+                              "name": "1",
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": 83,
+                  "name": "RETURN",
+                  "children": [
+                    {
+                      "id": 84,
+                      "name": "res",
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": 86,
+          "name": "DECL",
+          "children": [
+            {
+              "id": 87,
+              "name": "choix1",
+              "children": []
+            },
+            {
+              "id": 88,
+              "name": "integer",
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": 89,
+          "name": "DECL",
+          "children": [
+            {
+              "id": 90,
+              "name": "choix2",
+              "children": []
+            },
+            {
+              "id": 91,
+              "name": "integer",
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": 93,
+          "name": ":\u003d",
+          "children": [
+            {
+              "id": 92,
+              "name": "choix1",
+              "children": []
+            },
+            {
+              "id": 94,
+              "name": "2",
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": 96,
+          "name": ":\u003d",
+          "children": [
+            {
+              "id": 95,
+              "name": "choix2",
+              "children": []
+            },
+            {
+              "id": 97,
+              "name": "3",
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": 98,
+          "name": "FOR",
+          "children": [
+            {
+              "id": 99,
+              "name": "choix1",
+              "children": []
+            },
+            {
+              "id": 100,
+              "name": "1",
+              "children": []
+            },
+            {
+              "id": 101,
+              "name": "10",
+              "children": []
+            },
+            {
+              "id": 102,
+              "name": "FOR",
+              "children": [
+                {
+                  "id": 103,
+                  "name": "choix2",
+                  "children": []
+                },
+                {
+                  "id": 104,
+                  "name": "1",
+                  "children": []
+                },
+                {
+                  "id": 105,
+                  "name": "10",
+                  "children": []
+                },
+                {
+                  "id": 107,
+                  "name": ":\u003d",
+                  "children": [
+                    {
+                      "id": 106,
+                      "name": "expr",
+                      "children": []
+                    },
+                    {
+                      "id": 108,
+                      "name": "complique",
+                      "children": [
+                        {
+                          "id": 109,
+                          "name": "choix1",
+                          "children": []
+                        },
+                        {
+                          "id": 110,
+                          "name": "choix2",
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

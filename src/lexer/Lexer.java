@@ -238,5 +238,13 @@ public class Lexer {
         return s.toString();
     }
 
+    public String print(){
+        StringBuilder s = new StringBuilder();
+        for (Token t : this.tokens){
+            s.append(t.toString()).append("\n");
+        }
+        return s.toString();
+    }
+
 
 }

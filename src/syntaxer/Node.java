@@ -2,15 +2,22 @@ package syntaxer;
 import java.io.*;
 import java.util.ArrayList;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import java.util.concurrent.atomic.AtomicInteger;
+
 
 public class Node {
+    private static final AtomicInteger idGenerator = new AtomicInteger(0);
+
+    private int id;
     private String name;
     private ArrayList<Node> children;
 
     public Node(String name) {
+        this.id = idGenerator.incrementAndGet();
         this.name = name;
         this.children = new ArrayList<>();
-
     }
 
     public void addChild(Node type) {
@@ -60,7 +67,7 @@ public class Node {
     }
 
     public void writeJSONToFile(String fileName) throws IOException {
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String json = gson.toJson(this);
 
         try (FileWriter writer = new FileWriter(fileName)) {
@@ -91,5 +98,9 @@ public class Node {
             if (!this.children.get(i).equals(n.getChildren().get(i))) return false;
         }
         return true;
+    }
+
+    public int getId() {
+        return this.id;
     }
 }
