@@ -784,7 +784,7 @@ public class Syntaxer {
         }else if(currentTag == Tag.ID) {
             instr = IDENT();
             Node instrf = INSTR_FIN();
-            instrf.addChildToFront(instr);
+            if(instrf!=null){instrf.addChildToFront(instr);}
             return instrf;
         }
         return instr;
@@ -1513,6 +1513,7 @@ public class Syntaxer {
         return null;
     }
 
+    //permet de définir le nom d'une fonction/procédure/variable
     public Node IDENT() throws SyntaxException {
         Token current_token = tokens.poll();
         Tag current_tag = current_token.getTag();
@@ -1643,6 +1644,10 @@ public class Syntaxer {
     }
     public void addToken(Token token) {
         this.tokens.addLast(token);
+    }
+
+    public ArrayDeque<Token> getTokens(){
+        return this.tokens;
     }
 
 }
